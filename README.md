@@ -75,7 +75,9 @@ The MIT License applies only to original repository content. It does not grant r
 - `tpir-prep-assistant/references/contestant-selection-guide.md`: how audience selection works and how to prepare for the brief interview.
 - `tpir-prep-assistant/references/game-simulator-matrix.md`: simulator coverage for official-listed games and current-season aliases.
 - `tpir-prep-assistant/references/game-visual-links.md`: official openable visual page links and image links for game simulations.
-- `tpir-prep-assistant/references/showcase-showdown-guide.md`: Big Wheel spin-or-stay practice rules and scenarios.
+- `tpir-prep-assistant/references/big-wheel-simulator.md`: Big Wheel spin-or-stay practice rules and scenarios.
+- `tpir-prep-assistant/references/showcase-showdown-simulator.md`: official Showcase Showdown entrypoint that routes to Big Wheel practice and disambiguates final Showcase bidding.
+- `tpir-prep-assistant/references/showcase-bidding-simulator.md`: final Showcase bundle-estimation and bidding practice.
 - `tpir-prep-assistant/references/holiday-taping-guide.md`: Christmas and holiday taping preparation.
 - `tpir-prep-assistant/references/activity-bank.md`: reusable drills and scoring patterns.
 

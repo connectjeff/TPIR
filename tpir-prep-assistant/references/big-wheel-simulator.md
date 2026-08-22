@@ -1,6 +1,6 @@
-# Showcase Showdown Guide
+# Big Wheel Simulator
 
-Use this guide for Showcase Showdown / Big Wheel practice. This is the wheel segment, not final Showcase bidding.
+Use this simulator for Big Wheel spin-or-stay practice. On *The Price Is Right*, this segment is also called the Showcase Showdown. Keep it separate from final Showcase bidding.
 
 ## Core Rules
 
@@ -35,7 +35,7 @@ Use these as training heuristics, not formal expected-value tables:
 ## Simulator Prompt Template
 
 ```text
-Showcase Showdown practice. You are [first/second/third] spinner.
+Big Wheel practice. You are [first/second/third] spinner.
 
 Earlier live scores: [scores].
 Later contestants remaining: [count].
@@ -105,4 +105,4 @@ Good answer: stay is usually reasonable. You are not behind, and spinning risks 
 - Staying when an earlier live score is higher.
 - Ignoring whether later contestants remain.
 - Treating tie situations as automatic spin-again decisions.
-- Confusing Showcase Showdown with final Showcase bidding.
+- Confusing the Big Wheel / Showcase Showdown with final Showcase bidding.

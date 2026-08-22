@@ -4,7 +4,7 @@ Use these activities interactively. Present one prompt, wait for the user's answ
 
 For named pricing-game simulation, prefer [game-simulator-matrix.md](game-simulator-matrix.md). This file contains general drills, reusable scoring patterns, and example answers.
 
-For Showcase Showdown / Big Wheel spin-or-stay practice, use [showcase-showdown-guide.md](showcase-showdown-guide.md). Do not treat it like Showcase bidding or a pricing game.
+For Big Wheel spin-or-stay practice, use [big-wheel-simulator.md](big-wheel-simulator.md). For Showcase Showdown wording, use [showcase-showdown-simulator.md](showcase-showdown-simulator.md). For final Showcase bids, use [showcase-bidding-simulator.md](showcase-bidding-simulator.md).
 
 ## Selection Interview Drills
 
@@ -102,6 +102,8 @@ Variants:
 - Holiday bundle with decor, cookware, and gift cards.
 
 ### Showcase Bundle Builder
+
+For full final Showcase bidding practice, use [showcase-bidding-simulator.md](showcase-bidding-simulator.md).
 
 Give a bundle and ask for a 30-second total:
 - Trip for two to New York, 5 nights.

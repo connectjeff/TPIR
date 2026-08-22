@@ -74,6 +74,8 @@ Score:
 
 ### Holiday Showcase
 
+For a full final Showcase bidding session, use [showcase-bidding-simulator.md](showcase-bidding-simulator.md) and apply holiday prize assumptions.
+
 Prompt:
 "Estimate this showcase in 45 seconds: a German Christmas-market trip for two, a living room with holiday decor, a luxury home-theater package, and a compact SUV."
 

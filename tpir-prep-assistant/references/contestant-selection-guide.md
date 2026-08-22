@@ -77,7 +77,7 @@ Coach the weak example by adding a role, a real game, a reason, and a visual mom
 
 Have the user prepare three favorite games:
 
-- One famous game: Plinko, Cliff Hangers, Punch a Bunch, or Showcase Showdown.
+- One famous game or segment: Plinko, Cliff Hangers, Punch a Bunch, or Showcase Showdown. If the user chooses Showcase Showdown, coach it as the Big Wheel segment rather than a pricing game.
 - One pricing-skill game: Check-Out, Grocery Game, Hi-Lo, Pick-a-Pair, or To the Penny.
 - One car game: Dice Game, Lucky Seven, One Away, Pathfinder, Stack the Deck, That's Too Much, or Money Game.
 
