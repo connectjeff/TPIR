@@ -49,10 +49,10 @@ Accumulated value:
 
 Hidden value invariant:
 
-- Any actual retail price, pricing-game answer value, prize package value, cash location, car price, or Showcase total that the user is supposed to infer is private scoring state.
+- Any actual retail price, pricing-game prize value, cash location, car price, or Showcase total that the user is supposed to infer is private scoring state.
 - Choose hidden values before prompting, but do not show them in the prompt or in the running state before the stage resolves.
 - Describe only visible information: item descriptions, board ranges, displayed prices, prior bids, rules, and choices.
-- Reveal the hidden values only after the user has answered and the stage is being scored.
+- Reveal hidden prices only after the user has answered and the stage is being scored, using the phrase "actual retail price."
 - Never write "Prize value if won: $X" or similar answer-leaking language before a pricing game or final Showcase bid. Use "Prize package: [description]" instead.
 
 ## Stage 1: Come On Down
@@ -103,17 +103,17 @@ Scenario generation:
 
 Contestants Row bid patterns:
 
-- `spread_low`: all opponent bids are below the actual price, with one close high bid. Tests `$1 over` tactics.
-- `one_over`: one opponent bid is above actual price, two are below. Tests overbid recognition.
-- `all_high`: all opponent bids are above actual price. Tests the `$1` low-price read.
+- `spread_low`: all opponent bids are below the actual retail price, with one close high bid. Tests `$1 over` tactics.
+- `one_over`: one opponent bid is above the actual retail price, two are below. Tests overbid recognition.
+- `all_high`: all opponent bids are above the actual retail price. Tests the `$1` low-price read.
 - `clustered`: all bids are close together. Tests confidence and small increments.
 - `wild_low`: one very low bid, two plausible bids. Tests whether the user anchors on the low outlier.
 
 Bid-position strategy:
 
 - If bidding first, the user should bid what they think the actual retail price is. There are no visible opponent bids to cover.
-- If bidding second or third, the user should still mainly bid their actual price estimate, adjusted only for visible prior bids that are clearly too high, too low, or close to their estimate.
-- If bidding fourth, the user has full information and should usually make a tactical coverage bid: bid `$1` if all prior bids seem too high, bid `$1` more than the prior bid they think is closest but still below actual retail, or choose a gap if the closest visible bid seems too high.
+- If bidding second or third, the user should still mainly bid their actual retail price estimate, adjusted only for visible prior bids that are clearly too high, too low, or close to their estimate.
+- If bidding fourth, the user has full information and should usually make a tactical coverage bid: bid `$1` if all prior bids seem too high, bid `$1` more than the prior bid they think is closest but still below the actual retail price, or choose a gap if the closest visible bid seems too high.
 - Do not ask the user to explain every Contestants Row bid. Ask for the bid only; infer the likely strategy from bid amount and position, then coach after the result.
 
 Example generation recipe:
@@ -158,7 +158,7 @@ Resolution:
 - If the user bids first, they have no prior bids; evaluate whether they make a plausible opening bid.
 - If the user bids second or third, evaluate both price estimate and bid-position tactics with partial information.
 - If the user bids fourth, evaluate full-information tactics such as `$1`, `$1 over` the visible bid they likely believe is closest, or choosing a gap.
-- User wins if their bid is closest without going over.
+- User wins if their bid is closest without going over the actual retail price.
 - Interpret a `$1` bid as the user's strategic belief that every prior bid is too high. Do not treat it as a joke, refusal, or unsupported answer unless the user says otherwise.
 - Continue to the next Contestants Row item if the user loses before exhausting attempts.
 - Stop the pipeline only if the user loses the final allowed Contestants Row attempt.
@@ -188,7 +188,7 @@ Example `$1` interpretation:
 Prior bids: $850, $1,100, $1,350.
 User bid: $1.
 Interpretation: the user believes the actual retail price is below $850.
-Coach the read based on the actual price; do not ask why they bid $1 unless the context is unclear.
+Coach the read based on the actual retail price; do not ask why they bid $1 unless the context is unclear.
 ```
 
 Example first-bid prompt:
@@ -228,7 +228,7 @@ Selection:
 Resolution:
 
 - Decide the hidden actual values before asking.
-- Keep those values private. Do not reveal the actual prize value, target price, cash location, car price, or other answer value in the prompt.
+- Keep those values private. Do not reveal the actual retail price, target price, cash location, car price, or other hidden scoring value in the prompt.
 - Describe the visible board/game state and the prize package only.
 - Ask for one move or the minimum sequence needed to resolve the game.
 - Award 10 points and add the prize value if the user wins.
@@ -292,7 +292,7 @@ Resolution:
 
 - Set actual showcase value before asking.
 - Keep the actual showcase value private until after the user bids.
-- The user wins if they are closest without going over under the scenario.
+- The user wins if they are closest without going over the actual retail price of the showcase under the scenario.
 - Award 15 points and add showcase value if they win.
 - Award 5 coaching points for a coherent losing bid that is not an overbid.
 - Award 0 for an overbid or unsupported guess.

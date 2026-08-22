@@ -2,7 +2,7 @@
 
 Use this simulator for the final Showcase round, where two contestants bid on prize showcases. Keep this separate from Showcase Showdown / Big Wheel practice.
 
-Set the actual showcase value privately before prompting, but do not reveal it until after the user bids. The user is practicing estimation, so the prompt should list only the showcase prizes and any visible opponent context.
+Set the actual retail price of the showcase privately before prompting, but do not reveal it until after the user bids. The user is practicing estimation, so the prompt should list only the showcase prizes and any visible opponent context. When scoring, reveal it with the phrase "actual retail price."
 
 ## Core Rules
 

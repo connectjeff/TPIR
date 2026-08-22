@@ -2,7 +2,7 @@
 
 Use these activities interactively. Present one prompt, wait for the user's answer, then score and explain. Adjust difficulty based on the user's performance.
 
-For any activity where the user is estimating a price, choosing a correct price, or bidding, choose answer values privately and reveal them only during scoring. Do not leak actual retail prices, prize values, car prices, or Showcase totals in the prompt.
+For any activity where the user is estimating a price, choosing a correct price, or bidding, choose actual retail prices privately and reveal them only during scoring. Do not leak actual retail prices, prize values, car prices, or Showcase totals in the prompt. When scoring or revealing any price, use the phrase "actual retail price."
 
 For named pricing-game simulation, prefer [game-simulator-matrix.md](game-simulator-matrix.md). This file contains general drills, reusable scoring patterns, and example answers.
 
@@ -103,7 +103,7 @@ Evaluate:
 
 Example answer pattern:
 - Strong: "I think the TV is about $1,300, so $1,251 is worth it because it covers everything above the current high bid without overbidding if my estimate is right."
-- Strong: "$1, because I think the actual price is below every prior bid."
+- Strong: "$1, because I think the actual retail price is below every prior bid."
 - Weak: "Always bid $1 more." Coach that bid tactics depend on expected price and bid position.
 
 Prompting rule:

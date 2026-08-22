@@ -14,7 +14,7 @@ Coverage basis:
 
 When the user asks for a named game, run one simulator prompt, wait for the answer, then score it. When uncertain about exact current rules, direct the agent to verify the official game page before giving rule-specific advice.
 
-In every simulator, keep answer values hidden until the user has answered. Set actual prices, prize values, car prices, cash locations, correct choices, and Showcase totals privately for scoring, but do not disclose them in the prompt. The prompt should show only the visible board information, prize descriptions, displayed prices, prior bids, and choices that a contestant would see.
+In every simulator, keep actual retail prices hidden until the user has answered. Set actual retail prices, prize values, car prices, cash locations, correct choices, and Showcase totals privately for scoring, but do not disclose them in the prompt. The prompt should show only the visible board information, prize descriptions, displayed prices, prior bids, and choices that a contestant would see. When scoring or revealing any price, use the phrase "actual retail price."
 
 ## Universal Scoring
 
@@ -30,8 +30,8 @@ In every simulator, keep answer values hidden until the user has answered. Set a
 | --- | --- | --- | --- |
 | Any Number | Show a car, mid-prize, and piggy bank. Ask the user to choose digits one at a time after seeing a first car digit. | Uses car-price conventions and avoids wasting likely car digits on the piggy bank. | Picking favorite numbers randomly. |
 | Back to 75 / Back to 76 | Give a retro-styled board with numbered choices and ask the user to choose a path/option set under the current displayed rules. | Verifies current rules first; reasons from revealed feedback. | Assuming anniversary rules without checking the current page. |
-| Balance Game | Give three money bags plus a base amount and a prize. Ask which bags make the actual price. | Estimates the prize first, then adds bags. | Treating bags as abstract math without pricing the prize. |
-| Bargain Game | Show two prizes with sale prices. Ask which has the larger markdown from actual retail. | Estimates both actual prices and compares differences, not final prices. | Choosing the cheaper sale price. |
+| Balance Game | Give three money bags plus a base amount and a prize. Ask which bags make the actual retail price. | Estimates the prize first, then adds bags. | Treating bags as abstract math without pricing the prize. |
+| Bargain Game | Show two prizes with sale prices. Ask which has the larger markdown from actual retail price. | Estimates both actual retail prices and compares differences, not final prices. | Choosing the cheaper sale price. |
 | Bonkers | Give a four-digit displayed price and a prize. User marks each digit higher/lower under time pressure. | Fast initial estimate and willingness to change all wrong positions. | Moving one marker at a time without a price opinion. |
 | Bonus Game | Give four small prizes with displayed prices. User calls higher/lower to reveal windows. | Wins as many windows as possible using small-prize knowledge. | Thinking the bonus location is controllable. |
 | Bullseye | Give five grocery products. User chooses quantity of one item to hit target range. | Starts with unit-price arithmetic; pivots if outside range. | Picking favorite product rather than a controllable unit price. |
@@ -46,7 +46,7 @@ In every simulator, keep answer values hidden until the user has answered. Set a
 | Dice Game | User rolls digits for a car and calls exact/higher/lower for each. | Knows 1 must be higher and 6 must be lower if not exact. | Calling lower on 1 or higher on 6. |
 | Do the Math | Give two prizes and a dollar difference. User chooses add or subtract. | Estimates both prizes and compares difference. | Treating the cash amount as a bonus only. |
 | Double Cross | Give two crossing price paths. User slides to form two prize prices. | Checks both prices simultaneously. | Making one plausible price while the other is impossible. |
-| Double Prices | Give two possible prices for one prize. User chooses actual price. | Anchors by category and feature level. | Guessing solely by price ending. |
+| Double Prices | Give two possible prices for one prize. User chooses the actual retail price. | Anchors by category and feature level. | Guessing solely by price ending. |
 | Easy as 1-2-3 | Show three prizes. User ranks low, middle, high. | Uses relative retail value. | Assuming size equals price. |
 | Five Price Tags | Give a car and four small-prize true/false decisions to earn picks. User chooses the car price tag. | Maximizes picks, then uses car trim anchors. | Treating small prizes as unimportant. |
 | Flip Flop / Flip or Flop | Give four digits split into two pairs. User chooses flip, flop, both, or neither. | Estimates the prize and chooses plausible pair order. | Automatically flipping both. |
@@ -65,12 +65,12 @@ In every simulator, keep answer values hidden until the user has answered. Set a
 | Line 'em Up | Use three prize prices to choose middle digits of a car. | Tests car-price plausibility and uses feedback. | Changing all digits after partial feedback. |
 | Lion's Share / The Lion's Share | Give product/prize clues and staged choices. User chooses under the current rules after verification. | Verifies current official rules and reasons from revealed values. | Applying rules from a different new game or special. |
 | Lucky Seven / Lucky $even | Guess car digits while losing dollars equal to misses. | Uses midrange guesses and car-price conventions. | Extreme digit guesses without evidence. |
-| Magic # | Give two prizes. User sets a number between their actual prices. | Estimates both and places a safe middle number. | Setting too close to one estimate. |
+| Magic # | Give two prizes. User sets a number between their actual retail prices. | Estimates both and places a safe middle number. | Setting too close to one estimate. |
 | Make Your Move | Arrange digit blocks into prices for three prizes. | Uses digit length and prize category. | Creating one good price and two impossible ones. |
 | Master Key | Price small prizes to earn keys, then assign keys to locks. | Earns keys; understands final key choice is uncertain. | Treating key selection as predictable. |
 | Money Game | Pick two-digit cards for front/back of car while avoiding cash decoys. | Uses current car price anchors and common endings. | Picking all low cards because they look like cash. |
 | More or Less | Decide if each revealed price is more or less than actual, escalating to car. | Anchors each prize before answering. | Rushing small prizes and losing before the car. |
-| Most Expensive | Show three prizes. User identifies the highest actual price. | Compares category and quality, not size. | Assuming largest item is most expensive. |
+| Most Expensive | Show three prizes. User identifies the highest actual retail price. | Compares category and quality, not size. | Assuming largest item is most expensive. |
 | Now or Then | Give groceries and an old date. User calls current price or historical price. | Uses product inflation and shelf-stable category knowledge. | Treating every low price as "then." |
 | One Away | Adjust each wrong car digit up/down by one, then revise after honks. | Uses car-price plausibility and feedback count. | Changing digits randomly after partial feedback. |
 | One Right Price / 1 Right Price | Show one price and two prizes. User assigns price to correct prize. | Estimates both prizes. | Matching by superficial similarity. |
@@ -85,7 +85,7 @@ In every simulator, keep answer values hidden until the user has answered. Set a
 | Punch a Bunch | Higher/lower small prizes earn punches; user decides keep or continue. | Maximizes punches and uses expected-value thinking. | Continuing after a high slip without considering odds. |
 | Push Over | Choose where to stop a block of digits to form prize price. | Estimates prize range before moving blocks. | Stopping at the first familiar pattern. |
 | Race Game | Match four prices to four prizes under time pressure. | Starts with strongest matches, uses feedback efficiently. | Rebuilding the whole board without learning from feedback. |
-| Range Game | Stop a moving range over the actual price. | Estimates early and stops when centered. | Waiting too long because the range feels narrow. |
+| Range Game | Stop a moving range over the actual retail price. | Estimates early and stops when centered. | Waiting too long because the range feels narrow. |
 | Rat Race | Price small items within tolerances to earn rat picks. | Earns more picks through small-prize accuracy. | Treating rat selection as the main skill. |
 | Safe Crackers | Use three digits to set a prize safe combination. | Prices the prize and permutes digits logically. | Ignoring whether the price should be high or low. |
 | Secret X | Earn Xs through small prizes and place them to complete a line. | Earns extra Xs and uses board geometry. | Placing without planning possible lines. |
@@ -93,7 +93,7 @@ In every simulator, keep answer values hidden until the user has answered. Set a
 | Shopping Spree | Select prizes to reach a spending target. | Picks high-value prizes first. | Choosing low-value favorites and missing target. |
 | Side by Side | Choose the order of two two-digit blocks for a prize. | Estimates the prize scale. | Picking the smoother-sounding number. |
 | Spelling Bee | Price small prizes to earn cards; decide whether to take cash or continue. | Earns cards and weighs cash-out decision. | Chasing C-A-R with too few cards and no risk plan. |
-| Squeeze Play | Remove one middle digit from a displayed price. | Estimates actual price and removes the implausible extra digit. | Removing an endpoint digit, which is not the usual action. |
+| Squeeze Play | Remove one middle digit from a displayed price. | Estimates actual retail price and removes the implausible extra digit. | Removing an endpoint digit, which is not the usual action. |
 | Stack the Deck | Price grocery pairs to reveal car digits, then fill remaining digits. | Wins reveals and uses car conventions for blanks. | Guessing car digits before earning help. |
 | Swap Meet | Choose which prize has same price as a target prize. | Finds equivalent retail tier. | Matching by product category only. |
 | Switch | Decide whether two displayed prices should be switched between two prizes. | Estimates both prizes. | Always switching because the game name suggests it. |
@@ -101,7 +101,7 @@ In every simulator, keep answer values hidden until the user has answered. Set a
 | Take Two | Show four prizes and a target total. User picks the two prizes whose prices add to the target. | Estimates all four prizes and tests likely sums. | Confusing this with Two For One. |
 | Temptation | Use prize-price digits to build car price, then choose prizes or risk for car. | Builds plausible car price and makes a risk decision. | Risking valuable prizes on a low-confidence car price. |
 | Ten Chances | Use digit sets to write prices for two prizes and a car within ten tries. | Applies price endings and avoids impossible combinations. | Burning chances on permutations with bad endings. |
-| That's Too Much | Stop when displayed car price first exceeds actual retail. | Knows to stop just after actual price is passed. | Stopping at a price that merely seems affordable. |
+| That's Too Much | Stop when displayed car price first exceeds the actual retail price. | Knows to stop just after the actual retail price is passed. | Stopping at a price that merely seems affordable. |
 | Three Strikes | Draw digits/strikes from bag to place car price digits. | Uses known digits and positions carefully. | Placing a digit in a position made impossible by car class. |
 | Time Is Money | Arrange five grocery items into low/mid/high price shelves under time. | Fast category sorting and correction under feedback. | Freezing after the first wrong arrangement. |
 | To the Penny | Price groceries by choosing correct prices and managing pennies. | Uses grocery knowledge and saves pennies for uncertainty. | Spending pennies early on confident items. |
@@ -112,7 +112,7 @@ In every simulator, keep answer values hidden until the user has answered. Set a
 ## Agent Prompt Template
 
 ```text
-Let's simulate [game]. Visual reference: [official visual page or image link]. I will give you the visible board and constraints, then you answer with your move and reasoning. I will score you out of 10, reveal the practice answer value, and give one concrete adjustment.
+Let's simulate [game]. Visual reference: [official visual page or image link]. I will give you the visible board and constraints, then you answer with your move and reasoning. I will score you out of 10, reveal the practice actual retail price, and give one concrete adjustment.
 ```
 
 ## Building Current Price Inputs
