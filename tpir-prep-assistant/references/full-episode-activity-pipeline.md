@@ -10,8 +10,10 @@ Use this pipeline when the user wants a complete, ordered TPIR-style practice se
 
 Stop the pipeline immediately if the user loses either:
 
-- Closest Price / Contestants Row.
+- Closest Price / Contestants Row after all allowed attempts are exhausted.
 - Big Wheel.
+
+Default assumption: the user is one of the first four contestants called down, so they can receive up to six Contestants Row attempts. If the user is called down later, reduce the remaining attempts accordingly.
 
 If the user loses the random pricing game, continue to the Big Wheel with no added prize value from that game, matching the broad show flow where a contestant can still advance to the wheel after losing their pricing game.
 
@@ -22,6 +24,7 @@ Maintain and show this state after every stage:
 ```text
 Pipeline status: [active/eliminated/complete]
 Stage: [stage name]
+Contestants Row attempts: [wins or misses]/[max attempts]
 Score: [points]
 Accumulated value: $[dollar total]
 Won prizes: [list]
@@ -31,7 +34,7 @@ Notes: [one short coaching note]
 Recommended scoring:
 
 - Come on Down: 5 points for a clear, energetic, authentic response.
-- Closest Price / Contestants Row: 10 points for winning the bid; partial coaching points can be noted but do not advance the pipeline.
+- Closest Price / Contestants Row: 10 points for winning the bid; 0-2 coaching points may be noted for each failed attempt, but failed attempts do not add prize value or advance past Contestants Row.
 - Random pricing game: 10 points for a win, 0 for a loss; add the prize value only on a win.
 - Big Wheel: 10 points for advancing to the Showcase; stop if the user does not advance.
 - Final Showcase: 15 points for winning, 5 points for a coherent bid that loses, 0 for an overbid or incoherent bid.
@@ -67,6 +70,15 @@ Advance regardless of score. This is a warmup, not an elimination gate.
 
 Purpose: closest-without-going-over bid practice.
 
+Allowed attempts:
+
+- If the user is assumed to be one of the first four contestants called down, allow up to six Contestants Row attempts.
+- Track attempts as `attempt X of 6`.
+- If the user wins any attempt, add that item value and advance immediately to the random pricing game.
+- If the user loses an attempt before attempt 6, do not eliminate them; explain the result, update score/value, and run the next Contestants Row item.
+- If the user loses attempt 6, mark the pipeline eliminated and stop.
+- If the user is called down later than the first four, set maximum attempts to the number of remaining one-bid rounds.
+
 Prompt pattern:
 
 ```text
@@ -84,13 +96,16 @@ Resolution:
 
 - Set an actual retail price before asking the user, but do not reveal it.
 - User wins if their bid is closest without going over.
-- Stop the pipeline if the user loses.
+- Continue to the next Contestants Row item if the user loses before exhausting attempts.
+- Stop the pipeline only if the user loses the final allowed Contestants Row attempt.
 - If every contestant overbids, all bids are invalid in show practice; for the pipeline, rerun a fresh Contestants Row item rather than eliminating the user on a table-wide overbid.
 
 Scoring:
 
 - 10 points and add item value if the user wins.
-- If the user loses, mark pipeline eliminated and give the correct bid logic.
+- 0-2 coaching points for a lost attempt may be awarded for sound reasoning, but do not add item value.
+- If the user loses before the final attempt, keep the pipeline active and move to the next item.
+- If the user loses the final attempt, mark pipeline eliminated and give the correct bid logic.
 
 Example item:
 
@@ -99,6 +114,19 @@ Item: 65-inch midrange 4K TV.
 Actual retail price: $1,298.
 Prior bids: $850, $1,050, $1,250.
 Strong user bid: $1,251 if they believe the TV is above $1,250.
+```
+
+Example loss state before final attempt:
+
+```text
+Pipeline status: active
+Stage completed: Contestants Row attempt 1 of 6
+Contestants Row attempts: 1 loss / 6 max
+Score: 4
+Accumulated value: $0
+Won prizes: none
+Notes: Lost the bid, but five Contestants Row attempts remain because you were one of the first four called down.
+Next stage: Contestants Row attempt 2 of 6
 ```
 
 ## Stage 3: Random Pricing Game
@@ -186,7 +214,7 @@ Resolution:
 Start by saying:
 
 ```text
-Full TPIR pipeline: Come on Down -> Contestants Row -> random pricing game -> Big Wheel -> Final Showcase. I will keep score and accumulated prize value. The session stops if you lose Contestants Row or the Big Wheel.
+Full TPIR pipeline: Come on Down -> Contestants Row -> random pricing game -> Big Wheel -> Final Showcase. I will keep score and accumulated prize value. Assuming you are one of the first four contestants called down, you get up to six Contestants Row attempts. The session stops if you miss all six Contestants Row attempts or lose the Big Wheel.
 ```
 
 Then run exactly one stage at a time and wait for the user's answer before resolving that stage.
@@ -197,6 +225,7 @@ After resolving each stage, show:
 Score: [points]
 Accumulated value: $[value]
 Won prizes: [list]
+Contestants Row attempts: [state, when applicable]
 Next stage: [stage or eliminated/complete]
 ```
 

@@ -6,7 +6,7 @@ For named pricing-game simulation, prefer [game-simulator-matrix.md](game-simula
 
 For Big Wheel spin-or-stay practice, use [big-wheel-simulator.md](big-wheel-simulator.md). For Showcase Showdown wording, use [showcase-showdown-simulator.md](showcase-showdown-simulator.md). For final Showcase bids, use [showcase-bidding-simulator.md](showcase-bidding-simulator.md).
 
-For an ordered full-episode-style practice session, use [full-episode-activity-pipeline.md](full-episode-activity-pipeline.md). The pipeline stops if the user loses Contestants Row / closest-price bidding or the Big Wheel.
+For an ordered full-episode-style practice session, use [full-episode-activity-pipeline.md](full-episode-activity-pipeline.md). If the user is one of the first four contestants called down, the pipeline gives up to six Contestants Row attempts. It stops only after six failed Contestants Row attempts or a Big Wheel loss.
 
 ## Selection Interview Drills
 
