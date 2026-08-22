@@ -16,6 +16,8 @@ This repository contains a Codex-compatible skill, not an application. Keep chan
 - Treat official TPIR, CBS, On Camera Audiences, and Paramount sources as stronger than contestant anecdotes or fan-maintained pages.
 - Add last-checked dates and source reliability labels when adding research sources.
 - Prefer linking to official game pages or official image URLs for visuals. Do not commit copied TPIR screenshots or downloaded show images.
+- Preserve [NOTICE.md](NOTICE.md) and keep third-party rights language clear: MIT applies only to original repo content, not TPIR/CBS/Fremantle/Paramount media, marks, game boards, show text, or linked images.
+- Use TPIR names and game names only for nominative, descriptive, educational reference. Do not imply affiliation, endorsement, sponsorship, or permission from rights holders.
 - Do not promise contestant selection, prizes, taping admission, or game lineups.
 - Verify current ticketing, location, eligibility, and taping rules from official sources before giving concrete logistics advice.
 - Use ASCII unless editing quoted titles or source names that already require non-ASCII.

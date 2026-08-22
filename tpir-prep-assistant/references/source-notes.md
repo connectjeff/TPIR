@@ -2,6 +2,8 @@
 
 Use these notes to ground TPIR preparation advice. Cite the original sources when making claims that are not common knowledge. Re-check live sources for dates, locations, tickets, eligibility, special tapings, and rules because they change.
 
+Respect third-party rights. Use source links for attribution, summarize in original language, avoid long copied passages, and do not imply that this repository owns or licenses TPIR/CBS/Fremantle/Paramount materials. The repository MIT License applies only to original skill content.
+
 Last researched: 2026-08-22.
 
 Reliability labels:

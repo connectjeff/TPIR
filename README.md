@@ -2,7 +2,7 @@
 
 An agent skill for helping someone prepare to attend a taping of *The Price Is Right*, get ready for the contestant-selection process, study likely prize and grocery prices, and practice pricing-game scenarios.
 
-This repository is not affiliated with CBS, Fremantle, The Price Is Right, or On Camera Audiences. *The Price Is Right* and related names are trademarks of their respective owners. This is an independent preparation and study aid.
+This repository is not affiliated with, endorsed by, sponsored by, or approved by CBS, Paramount Global, Fremantle, The Price Is Right, On Camera Audiences, or any related rights holder. *The Price Is Right* and related names, logos, game names, slogans, trade dress, and media are trademarks or copyrighted materials of their respective owners. This project uses those names only for nominative, descriptive, and educational reference.
 
 ## What It Does
 
@@ -63,6 +63,12 @@ Help me write a 20-second selection interview answer. I am going with four cowor
 The skill includes a source guide at `tpir-prep-assistant/references/source-notes.md`. It references official TPIR pages, On Camera Audiences ticket information, CBS episode listings, producer statements, former contestant reports, holiday press materials, and academic bidding research.
 
 Agents should verify current ticketing, location, taping themes, eligibility, studio rules, and dates from official sources before giving concrete logistics advice.
+
+## Attribution And Rights
+
+See [NOTICE.md](NOTICE.md) for attribution, trademark, copyright, and third-party rights notices.
+
+The MIT License applies only to original repository content. It does not grant rights to TPIR, CBS, Paramount, Fremantle, On Camera Audiences, show media, linked images, trademarks, trade dress, game boards, or other third-party materials.
 
 ## Reference Guides
 

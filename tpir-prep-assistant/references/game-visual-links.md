@@ -4,7 +4,7 @@ Use this file with [game-simulator-matrix.md](game-simulator-matrix.md). When si
 
 Last researched: 2026-08-22.
 
-Source: official TPIR games index, https://priceisright.com/games/. The image links below are official site rollover images surfaced by that page. Prefer openable links over copying, downloading, or redistributing show images.
+Source: official TPIR games index, https://priceisright.com/games/. The image links below are official site rollover images surfaced by that page. Prefer openable links over copying, downloading, or redistributing show images. These links are references to third-party copyrighted materials; they are not repository assets and are not covered by this repository's MIT License.
 
 ## Use Guidance
 
@@ -12,6 +12,7 @@ Source: official TPIR games index, https://priceisright.com/games/. The image li
 - If image display is unavailable, provide the official visual page and image link as clickable links.
 - If the direct image fails, use the official visual page link or re-check https://priceisright.com/games/.
 - Treat current-season aliases as the same visual source as the official game ID.
+- Do not download, cache, transform, or re-host these images unless the user has rights or permission to do so.
 
 ## Official Visual Links
 
