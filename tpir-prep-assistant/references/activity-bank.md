@@ -6,6 +6,8 @@ For named pricing-game simulation, prefer [game-simulator-matrix.md](game-simula
 
 For Big Wheel spin-or-stay practice, use [big-wheel-simulator.md](big-wheel-simulator.md). For Showcase Showdown wording, use [showcase-showdown-simulator.md](showcase-showdown-simulator.md). For final Showcase bids, use [showcase-bidding-simulator.md](showcase-bidding-simulator.md).
 
+For an ordered full-episode-style practice session, use [full-episode-activity-pipeline.md](full-episode-activity-pipeline.md). The pipeline stops if the user loses Contestants Row / closest-price bidding or the Big Wheel.
+
 ## Selection Interview Drills
 
 ### 20-Second Hook

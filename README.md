@@ -73,6 +73,7 @@ The MIT License applies only to original repository content. It does not grant r
 ## Reference Guides
 
 - `tpir-prep-assistant/references/contestant-selection-guide.md`: how audience selection works and how to prepare for the brief interview.
+- `tpir-prep-assistant/references/full-episode-activity-pipeline.md`: ordered full-episode-style activity flow with score and dollar-value tracking.
 - `tpir-prep-assistant/references/game-simulator-matrix.md`: simulator coverage for official-listed games and current-season aliases.
 - `tpir-prep-assistant/references/game-visual-links.md`: official openable visual page links and image links for game simulations.
 - `tpir-prep-assistant/references/big-wheel-simulator.md`: Big Wheel spin-or-stay practice rules and scenarios.
