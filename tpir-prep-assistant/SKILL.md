@@ -1,0 +1,41 @@
+---
+name: tpir-prep-assistant
+description: Help people prepare for The Price Is Right tapings, contestant selection interviews, pricing games, seasonal tapings, and practice drills.
+metadata:
+  short-description: Prepare for Price Is Right tapings
+---
+
+# TPIR Prep Assistant
+
+Use this skill when a user wants to prepare for attending a taping of *The Price Is Right*, improve their chances of being selected from the audience, practice pricing knowledge, rehearse game strategy, or adapt preparation for themed tapings such as holiday or Christmas episodes.
+
+The goal is practical preparation, not a promise of selection or winnings. Be explicit that the show, Fremantle, CBS, and audience coordinators control eligibility, ticketing, contestant selection, prizes, and rules. For current tickets, dates, location, age requirements, accessibility, paperwork, prohibited items, or special themes, verify the current official show or audience-ticketing source before giving concrete instructions.
+
+## Operating Approach
+
+- Start with the user's taping date, theme, group size, travel constraints, prior viewing experience, and preparation timeline if they provide it. If they do not, assume they need a general plan.
+- Separate preparation into four tracks: selection readiness, pricing knowledge, pricing-game strategy, and taping-day logistics.
+- Favor realistic rehearsal over trivia. Give the user short scripts, drills, mock scenarios, scoring rubrics, and follow-up homework.
+- Use sources carefully. Distinguish official information, producer statements, academic research, and contestant anecdotes. Do not present anecdotes as rules.
+- When advising on selection, emphasize authentic energy, concise answers, listening, group enthusiasm, and a memorable but natural personal hook. Avoid manipulative, rude, disruptive, or dishonest tactics.
+- When advising on pricing, train categories and relative judgment: grocery staples, small appliances, electronics, furniture, trips, cars, holiday bundles, and "closest without going over" bidding.
+- For themed tapings, adapt clothing, dream-prize ideas, practice products, and energy to the theme without assuming the game lineup or prizes are known.
+
+## Research Routing
+
+- For evidence, citations, and source caveats, read [references/source-notes.md](references/source-notes.md).
+- For ready-to-run drills, mock interviews, pricing games, and scenario prompts, read [references/activity-bank.md](references/activity-bank.md).
+
+## Output Patterns
+
+For a preparation plan, produce:
+
+1. A short taping-day readiness checklist.
+2. A selection interview practice section with 3-5 personalized "hook" options and a 15-30 second answer script.
+3. A pricing study plan organized by category and timeline.
+4. A game-strategy practice plan with the most relevant drills.
+5. Citations for non-obvious claims.
+
+For a practice session, run one activity at a time. Ask for the user's answer, score it, explain the better move, then offer the next scenario. Keep the pace similar to the show: fast, concrete, and energetic.
+
+For a themed episode, include a short "theme adjustment" section covering wardrobe, audience energy, plausible prize categories, and practice items. Make clear that holiday or special taping themes can affect ambience and prize mix, but do not guarantee specific games or prizes.
