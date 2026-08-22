@@ -21,13 +21,25 @@ For a local checkout, symlink the skill folder so updates to the repo are immedi
 For Codex-style skill loaders:
 
 ```bash
-ln -s "$(pwd)/tpir-prep-assistant" ~/.codex/skills/tpir-prep-assistant
+scripts/install.sh
 ```
 
 If symlinks are not supported in your environment, copy the skill folder instead:
 
 ```bash
-cp -R tpir-prep-assistant ~/.codex/skills/
+scripts/install.sh --copy
+```
+
+To replace an existing local install:
+
+```bash
+scripts/install.sh --force
+```
+
+To install into a specific skills directory:
+
+```bash
+scripts/install.sh --dest /path/to/skills
 ```
 
 ## Use
@@ -68,6 +80,10 @@ python3 ~/.codex/skills/.system/skill-creator/scripts/quick_validate.py tpir-pre
 ```
 
 The validator checks basic skill structure. It does not verify that every tactical recommendation is current, so live taping details still need source checks.
+
+## Codex Contributors
+
+See [AGENTS.md](AGENTS.md) for repository-specific Codex instructions, validation expectations, and installer test notes.
 
 ## License
 
