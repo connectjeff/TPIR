@@ -84,6 +84,8 @@ Example answer pattern:
 
 ### Contestants Row Simulator
 
+Generate fresh items during practice. Do not reuse the example below or a recent prompt unless the user asks to replay it. Rotate item categories and vary opponent-bid patterns so the user has to reason from the item and bids, not memory.
+
 Prompt:
 "Prize: 65-inch midrange 4K TV. Bids before you: $900, $1,100, $1,250. You bid last. What do you bid and why?"
 
@@ -104,6 +106,14 @@ Variants:
 - All prior bids look too high.
 - One bid is clearly low and one is close to expected retail.
 - Holiday bundle with decor, cookware, and gift cards.
+
+Scenario-generation categories:
+- Electronics and smart home.
+- Kitchen appliances and espresso/coffee gear.
+- Fitness, patio, outdoor, and hobby equipment.
+- Furniture, bedding, and decor.
+- Travel accessories and designer goods.
+- Music, photo, gaming, and creator gear.
 
 ### Showcase Bundle Builder
 

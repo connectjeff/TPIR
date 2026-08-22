@@ -79,6 +79,34 @@ Allowed attempts:
 - If the user loses attempt 6, mark the pipeline eliminated and stop.
 - If the user is called down later than the first four, set maximum attempts to the number of remaining one-bid rounds.
 
+Scenario generation:
+
+- Generate Contestants Row items from rules instead of reusing documentation examples.
+- Keep a `recent_items` list for the current session. Do not repeat an item, near-duplicate, or category if there are reasonable unused alternatives.
+- Do not reuse examples from this file, [activity-bank.md](activity-bank.md), or earlier chat turns unless the user explicitly asks to replay an example.
+- Rotate categories across attempts: electronics, kitchen appliances, fitness/outdoor, home furniture, travel accessories, music/photo gear, yard/patio, smart home, designer accessories, hobby equipment.
+- Pick a hidden actual retail price before asking. Use realistic practice values, rounded to normal retail endings when helpful.
+- Generate three opponent bids around the hidden price so the user has a meaningful strategic choice. Use one of the bid patterns below.
+
+Contestants Row bid patterns:
+
+- `spread_low`: all opponent bids are below the actual price, with one close high bid. Tests `$1 over` tactics.
+- `one_over`: one opponent bid is above actual price, two are below. Tests overbid recognition.
+- `all_high`: all opponent bids are above actual price. Tests the `$1` low-price read.
+- `clustered`: all bids are close together. Tests confidence and small increments.
+- `wild_low`: one very low bid, two plausible bids. Tests whether the user anchors on the low outlier.
+
+Example generation recipe:
+
+```text
+Category: fitness/outdoor
+Item: pair of folding electric scooters with helmets
+Hidden actual retail price: $1,738
+Pattern: spread_low
+Prior bids: $1,100, $1,450, $1,700
+Good tactical bids: $1,701 if the user believes the prize is above $1,700; lower if they think $1,700 is too high.
+```
+
 Prompt pattern:
 
 ```text
@@ -116,6 +144,8 @@ Actual retail price: $1,298.
 Prior bids: $850, $1,050, $1,250.
 Strong user bid: $1,251 if they believe the TV is above $1,250.
 ```
+
+Use examples only for documentation or explanation. In an active pipeline, generate a new item instead.
 
 Example `$1` interpretation:
 
