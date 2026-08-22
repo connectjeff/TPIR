@@ -2,6 +2,8 @@
 
 Use this file to run simulator activities for any current official-listed TPIR pricing game. It is intentionally compact: each row gives a prompt pattern, scoring focus, and coachable mistake. Expand the prompt with current-ish prices and brands when running a session.
 
+Before simulating a named game, consult [game-visual-links.md](game-visual-links.md). Include either the official visual page link or the direct official image link in the prompt so the user can see the board being discussed. Prefer links over copying or storing show images in generated files.
+
 Last researched: 2026-08-22.
 
 Coverage basis:
@@ -108,7 +110,7 @@ When the user asks for a named game, run one simulator prompt, wait for the answ
 ## Agent Prompt Template
 
 ```text
-Let's simulate [game]. I will give you the board and constraints, then you answer with your move and reasoning. I will score you out of 10 and give one concrete adjustment.
+Let's simulate [game]. Visual reference: [official visual page or image link]. I will give you the board and constraints, then you answer with your move and reasoning. I will score you out of 10 and give one concrete adjustment.
 ```
 
 ## Building Current Price Inputs

@@ -19,7 +19,7 @@ Reliability labels:
 
 - Official TPIR games list: https://priceisright.com/games/  
   Label: Official. Last checked: 2026-08-22.
-  Use this as the primary source for which pricing games are recognized by the show. Individual pages, such as Golden Road at https://priceisright.com/game/golden-road/, give concise gameplay summaries. Note: the official list's `to3ialhijts` slug resolves to Take Two.
+  Use this as the primary source for which pricing games are recognized by the show. Individual pages, such as Golden Road at https://priceisright.com/game/golden-road/, give concise gameplay summaries. The games index exposes official visual page IDs and official rollover image URLs used in [game-visual-links.md](game-visual-links.md). Note: the official list's `to3ialhijts` slug resolves to Take Two.
 
 - On Camera Audiences TPIR ticket page: https://on-camera-audiences.com/shows/the-price-is-right/  
   Label: Official audience-coordinator source. Last checked: 2026-08-22.

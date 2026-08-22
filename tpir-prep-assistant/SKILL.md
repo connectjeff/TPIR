@@ -27,6 +27,7 @@ The goal is practical preparation, not a promise of selection or winnings. Be ex
 - For contestant selection coaching, read [references/contestant-selection-guide.md](references/contestant-selection-guide.md).
 - For ready-to-run general drills and answer-key patterns, read [references/activity-bank.md](references/activity-bank.md).
 - For pricing-game simulator coverage, including every official-listed current game and current-season aliases, read [references/game-simulator-matrix.md](references/game-simulator-matrix.md).
+- For official openable game-board visuals and image links, read [references/game-visual-links.md](references/game-visual-links.md).
 - For Christmas or holiday taping preparation, read [references/holiday-taping-guide.md](references/holiday-taping-guide.md).
 
 ## Output Patterns
@@ -39,6 +40,6 @@ For a preparation plan, produce:
 4. A game-strategy practice plan with the most relevant drills.
 5. Citations for non-obvious claims.
 
-For a practice session, run one activity at a time. Ask for the user's answer, score it, explain the better move, then offer the next scenario. Keep the pace similar to the show: fast, concrete, and energetic.
+For a practice session, run one activity at a time. When simulating a named pricing game, include an official visual page link or direct image link when available, ask for the user's answer, score it, explain the better move, then offer the next scenario. Keep the pace similar to the show: fast, concrete, and energetic.
 
 For a themed episode, include a short "theme adjustment" section covering wardrobe, audience energy, plausible prize categories, and practice items. Make clear that holiday or special taping themes can affect ambience and prize mix, but do not guarantee specific games or prizes.

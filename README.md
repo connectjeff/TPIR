@@ -68,6 +68,7 @@ Agents should verify current ticketing, location, taping themes, eligibility, st
 
 - `tpir-prep-assistant/references/contestant-selection-guide.md`: how audience selection works and how to prepare for the brief interview.
 - `tpir-prep-assistant/references/game-simulator-matrix.md`: simulator coverage for official-listed games and current-season aliases.
+- `tpir-prep-assistant/references/game-visual-links.md`: official openable visual page links and image links for game simulations.
 - `tpir-prep-assistant/references/holiday-taping-guide.md`: Christmas and holiday taping preparation.
 - `tpir-prep-assistant/references/activity-bank.md`: reusable drills and scoring patterns.
 

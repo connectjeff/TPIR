@@ -15,6 +15,7 @@ This repository contains a Codex-compatible skill, not an application. Keep chan
 - Keep `SKILL.md` concise. Put long strategy notes, source details, and scenario banks in `references/`.
 - Treat official TPIR, CBS, On Camera Audiences, and Paramount sources as stronger than contestant anecdotes or fan-maintained pages.
 - Add last-checked dates and source reliability labels when adding research sources.
+- Prefer linking to official game pages or official image URLs for visuals. Do not commit copied TPIR screenshots or downloaded show images.
 - Do not promise contestant selection, prizes, taping admission, or game lineups.
 - Verify current ticketing, location, eligibility, and taping rules from official sources before giving concrete logistics advice.
 - Use ASCII unless editing quoted titles or source names that already require non-ASCII.
