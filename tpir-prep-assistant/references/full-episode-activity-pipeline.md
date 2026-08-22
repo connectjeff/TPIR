@@ -89,6 +89,8 @@ Scenario generation:
 - Generate three opponent bids around the hidden price so the user has a meaningful strategic choice. Use one of the bid patterns below.
 - Vary the user's bid position across attempts. Do not assume the user always bids last.
 - Track `recent_bid_positions` and rotate among first, second, third, and fourth when practical.
+- The user can bid first only on their first Contestants Row attempt. If they lose an attempt and remain in Contestants Row, they cannot bid first on the next attempt because the newly called contestant bids first.
+- For attempts 2-6 after a loss, choose the user's bid position from second, third, or fourth.
 - If the user is not bidding last, show only the bids already made before the user's turn. Generate later opponent bids secretly after the user answers so the result can be scored realistically.
 
 Contestants Row bid patterns:
@@ -124,6 +126,14 @@ Known bids before you:
 Contestants still to bid after you: [count]
 
 What is your bid and why?
+```
+
+Attempt-position examples:
+
+```text
+Attempt 1 of 6: user may bid first, second, third, or fourth.
+Attempt 2 of 6 after a loss: new contestant bids first; user may bid second, third, or fourth.
+Attempt 3-6 after additional losses: user still may not bid first.
 ```
 
 Resolution:

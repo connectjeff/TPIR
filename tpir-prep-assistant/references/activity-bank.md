@@ -84,7 +84,7 @@ Example answer pattern:
 
 ### Contestants Row Simulator
 
-Generate fresh items during practice. Do not reuse the example below or a recent prompt unless the user asks to replay it. Rotate item categories, bid positions, and opponent-bid patterns so the user has to reason from the item, visible bids, and turn order, not memory.
+Generate fresh items during practice. Do not reuse the example below or a recent prompt unless the user asks to replay it. Rotate item categories, bid positions, and opponent-bid patterns so the user has to reason from the item, visible bids, and turn order, not memory. In a multi-attempt Contestants Row pipeline, the user can bid first only on their first attempt; after any failed attempt, the newly called contestant bids first and the user can only bid second, third, or fourth.
 
 Prompt:
 "Prize: 65-inch midrange 4K TV. Bids before you: $900, $1,100, $1,250. You bid last. What do you bid and why?"
@@ -104,6 +104,7 @@ Example answer pattern:
 
 Variants:
 - User bids first with uncertain item.
+- User loses once, then bids second, third, or fourth because the new contestant bids first.
 - User bids second or third with only partial information.
 - User bids last with all other bids visible.
 - All prior bids look too high.
