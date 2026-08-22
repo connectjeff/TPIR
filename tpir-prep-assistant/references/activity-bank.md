@@ -87,7 +87,7 @@ Example answer pattern:
 Generate fresh items during practice. Do not reuse the example below or a recent prompt unless the user asks to replay it. Rotate item categories, bid positions, and opponent-bid patterns so the user has to reason from the item, visible bids, and turn order, not memory. In a multi-attempt Contestants Row pipeline, the user can bid first only on their first attempt; after any failed attempt, the newly called contestant bids first and the user can only bid second, third, or fourth.
 
 Prompt:
-"Prize: 65-inch midrange 4K TV. Bids before you: $900, $1,100, $1,250. You bid last. What do you bid and why?"
+"Prize: 65-inch midrange 4K TV. Bids before you: $900, $1,100, $1,250. You bid last. What is your bid?"
 
 Evaluate:
 - Does the user estimate the prize first?
@@ -96,11 +96,17 @@ Evaluate:
 - Do they consider $1,251 only if they believe the item is above $1,250?
 - Do they avoid reflexively bidding $1 or $1 over without a price opinion?
 - If the user bids $1, assume they are saying all prior bids are too high unless they state a different reason.
+- If the user bids fourth, assume a `$1 over` bid targets the prior bid they think is closest without going over.
+- If the user bids first, second, or third, assume they are primarily bidding their actual retail estimate with partial information.
 
 Example answer pattern:
 - Strong: "I think the TV is about $1,300, so $1,251 is worth it because it covers everything above the current high bid without overbidding if my estimate is right."
 - Strong: "$1, because I think the actual price is below every prior bid."
 - Weak: "Always bid $1 more." Coach that bid tactics depend on expected price and bid position.
+
+Prompting rule:
+- During active simulations, ask only for the bid unless the user asks to explain strategy.
+- After resolving the bid, explain the likely strategy and whether it fit the bid position.
 
 Variants:
 - User bids first with uncertain item.

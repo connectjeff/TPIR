@@ -101,6 +101,13 @@ Contestants Row bid patterns:
 - `clustered`: all bids are close together. Tests confidence and small increments.
 - `wild_low`: one very low bid, two plausible bids. Tests whether the user anchors on the low outlier.
 
+Bid-position strategy:
+
+- If bidding first, the user should bid what they think the actual retail price is. There are no visible opponent bids to cover.
+- If bidding second or third, the user should still mainly bid their actual price estimate, adjusted only for visible prior bids that are clearly too high, too low, or close to their estimate.
+- If bidding fourth, the user has full information and should usually make a tactical coverage bid: bid `$1` if all prior bids seem too high, bid `$1` more than the prior bid they think is closest but still below actual retail, or choose a gap if the closest visible bid seems too high.
+- Do not ask the user to explain every Contestants Row bid. Ask for the bid only; infer the likely strategy from bid amount and position, then coach after the result.
+
 Example generation recipe:
 
 ```text
@@ -125,7 +132,7 @@ Known bids before you:
 
 Contestants still to bid after you: [count]
 
-What is your bid and why?
+What is your bid?
 ```
 
 Attempt-position examples:
@@ -142,7 +149,7 @@ Resolution:
 - Set the user's bid position before asking. Reveal only prior bids, not future bids.
 - If the user bids first, they have no prior bids; evaluate whether they make a plausible opening bid.
 - If the user bids second or third, evaluate both price estimate and bid-position tactics with partial information.
-- If the user bids fourth, evaluate full-information tactics such as `$1`, `$1 over`, or choosing a gap.
+- If the user bids fourth, evaluate full-information tactics such as `$1`, `$1 over` the visible bid they likely believe is closest, or choosing a gap.
 - User wins if their bid is closest without going over.
 - Interpret a `$1` bid as the user's strategic belief that every prior bid is too high. Do not treat it as a joke, refusal, or unsupported answer unless the user says otherwise.
 - Continue to the next Contestants Row item if the user loses before exhausting attempts.
