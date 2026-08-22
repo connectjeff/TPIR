@@ -87,6 +87,9 @@ Scenario generation:
 - Rotate categories across attempts: electronics, kitchen appliances, fitness/outdoor, home furniture, travel accessories, music/photo gear, yard/patio, smart home, designer accessories, hobby equipment.
 - Pick a hidden actual retail price before asking. Use realistic practice values, rounded to normal retail endings when helpful.
 - Generate three opponent bids around the hidden price so the user has a meaningful strategic choice. Use one of the bid patterns below.
+- Vary the user's bid position across attempts. Do not assume the user always bids last.
+- Track `recent_bid_positions` and rotate among first, second, third, and fourth when practical.
+- If the user is not bidding last, show only the bids already made before the user's turn. Generate later opponent bids secretly after the user answers so the result can be scored realistically.
 
 Contestants Row bid patterns:
 
@@ -103,7 +106,8 @@ Category: fitness/outdoor
 Item: pair of folding electric scooters with helmets
 Hidden actual retail price: $1,738
 Pattern: spread_low
-Prior bids: $1,100, $1,450, $1,700
+User bid position: fourth
+Known prior bids: $1,100, $1,450, $1,700
 Good tactical bids: $1,701 if the user believes the prize is above $1,700; lower if they think $1,700 is too high.
 ```
 
@@ -112,17 +116,23 @@ Prompt pattern:
 ```text
 Contestants Row. Item up for bids: [item].
 
-Bids before you:
-- Contestant 1: $[bid]
-- Contestant 2: $[bid]
-- Contestant 3: $[bid]
+You are bidding [first/second/third/fourth].
 
-You bid last. What is your bid and why?
+Known bids before you:
+- [none, or contestant bid list]
+
+Contestants still to bid after you: [count]
+
+What is your bid and why?
 ```
 
 Resolution:
 
 - Set an actual retail price before asking the user, but do not reveal it.
+- Set the user's bid position before asking. Reveal only prior bids, not future bids.
+- If the user bids first, they have no prior bids; evaluate whether they make a plausible opening bid.
+- If the user bids second or third, evaluate both price estimate and bid-position tactics with partial information.
+- If the user bids fourth, evaluate full-information tactics such as `$1`, `$1 over`, or choosing a gap.
 - User wins if their bid is closest without going over.
 - Interpret a `$1` bid as the user's strategic belief that every prior bid is too high. Do not treat it as a joke, refusal, or unsupported answer unless the user says otherwise.
 - Continue to the next Contestants Row item if the user loses before exhausting attempts.
@@ -154,6 +164,16 @@ Prior bids: $850, $1,100, $1,350.
 User bid: $1.
 Interpretation: the user believes the actual retail price is below $850.
 Coach the read based on the actual price; do not ask why they bid $1 unless the context is unclear.
+```
+
+Example first-bid prompt:
+
+```text
+Contestants Row. Item up for bids: designer luggage set with packing cubes.
+You are bidding first.
+Known bids before you: none.
+Contestants still to bid after you: 3.
+What is your bid and why?
 ```
 
 Example loss state before final attempt:

@@ -84,7 +84,7 @@ Example answer pattern:
 
 ### Contestants Row Simulator
 
-Generate fresh items during practice. Do not reuse the example below or a recent prompt unless the user asks to replay it. Rotate item categories and vary opponent-bid patterns so the user has to reason from the item and bids, not memory.
+Generate fresh items during practice. Do not reuse the example below or a recent prompt unless the user asks to replay it. Rotate item categories, bid positions, and opponent-bid patterns so the user has to reason from the item, visible bids, and turn order, not memory.
 
 Prompt:
 "Prize: 65-inch midrange 4K TV. Bids before you: $900, $1,100, $1,250. You bid last. What do you bid and why?"
@@ -92,6 +92,7 @@ Prompt:
 Evaluate:
 - Does the user estimate the prize first?
 - Do they understand closest without going over?
+- Do they adapt to bidding first, second, third, or fourth rather than assuming the final bid position?
 - Do they consider $1,251 only if they believe the item is above $1,250?
 - Do they avoid reflexively bidding $1 or $1 over without a price opinion?
 - If the user bids $1, assume they are saying all prior bids are too high unless they state a different reason.
@@ -103,6 +104,8 @@ Example answer pattern:
 
 Variants:
 - User bids first with uncertain item.
+- User bids second or third with only partial information.
+- User bids last with all other bids visible.
 - All prior bids look too high.
 - One bid is clearly low and one is close to expected retail.
 - Holiday bundle with decor, cookware, and gift cards.
