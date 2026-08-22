@@ -47,6 +47,14 @@ Accumulated value:
 - Add Showcase value only if the user wins the final Showcase.
 - Do not add hypothetical values from lost stages.
 
+Hidden value invariant:
+
+- Any actual retail price, pricing-game answer value, prize package value, cash location, car price, or Showcase total that the user is supposed to infer is private scoring state.
+- Choose hidden values before prompting, but do not show them in the prompt or in the running state before the stage resolves.
+- Describe only visible information: item descriptions, board ranges, displayed prices, prior bids, rules, and choices.
+- Reveal the hidden values only after the user has answered and the stage is being scored.
+- Never write "Prize value if won: $X" or similar answer-leaking language before a pricing game or final Showcase bid. Use "Prize package: [description]" instead.
+
 ## Stage 1: Come On Down
 
 Purpose: warm up selection readiness and stage energy.
@@ -220,6 +228,8 @@ Selection:
 Resolution:
 
 - Decide the hidden actual values before asking.
+- Keep those values private. Do not reveal the actual prize value, target price, cash location, car price, or other answer value in the prompt.
+- Describe the visible board/game state and the prize package only.
 - Ask for one move or the minimum sequence needed to resolve the game.
 - Award 10 points and add the prize value if the user wins.
 - If the user loses, add 0 and continue to the Big Wheel.
@@ -281,6 +291,7 @@ Give your bid and a quick category-by-category estimate.
 Resolution:
 
 - Set actual showcase value before asking.
+- Keep the actual showcase value private until after the user bids.
 - The user wins if they are closest without going over under the scenario.
 - Award 15 points and add showcase value if they win.
 - Award 5 coaching points for a coherent losing bid that is not an overbid.

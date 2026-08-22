@@ -14,6 +14,8 @@ Coverage basis:
 
 When the user asks for a named game, run one simulator prompt, wait for the answer, then score it. When uncertain about exact current rules, direct the agent to verify the official game page before giving rule-specific advice.
 
+In every simulator, keep answer values hidden until the user has answered. Set actual prices, prize values, car prices, cash locations, correct choices, and Showcase totals privately for scoring, but do not disclose them in the prompt. The prompt should show only the visible board information, prize descriptions, displayed prices, prior bids, and choices that a contestant would see.
+
 ## Universal Scoring
 
 - 2 points: understands the rule and win condition.
@@ -110,7 +112,7 @@ When the user asks for a named game, run one simulator prompt, wait for the answ
 ## Agent Prompt Template
 
 ```text
-Let's simulate [game]. Visual reference: [official visual page or image link]. I will give you the board and constraints, then you answer with your move and reasoning. I will score you out of 10 and give one concrete adjustment.
+Let's simulate [game]. Visual reference: [official visual page or image link]. I will give you the visible board and constraints, then you answer with your move and reasoning. I will score you out of 10, reveal the practice answer value, and give one concrete adjustment.
 ```
 
 ## Building Current Price Inputs

@@ -2,6 +2,8 @@
 
 Use these activities interactively. Present one prompt, wait for the user's answer, then score and explain. Adjust difficulty based on the user's performance.
 
+For any activity where the user is estimating a price, choosing a correct price, or bidding, choose answer values privately and reveal them only during scoring. Do not leak actual retail prices, prize values, car prices, or Showcase totals in the prompt.
+
 For named pricing-game simulation, prefer [game-simulator-matrix.md](game-simulator-matrix.md). This file contains general drills, reusable scoring patterns, and example answers.
 
 For Big Wheel spin-or-stay practice, use [big-wheel-simulator.md](big-wheel-simulator.md). For Showcase Showdown wording, use [showcase-showdown-simulator.md](showcase-showdown-simulator.md). For final Showcase bids, use [showcase-bidding-simulator.md](showcase-bidding-simulator.md).
