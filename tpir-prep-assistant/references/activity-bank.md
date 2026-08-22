@@ -4,6 +4,8 @@ Use these activities interactively. Present one prompt, wait for the user's answ
 
 For named pricing-game simulation, prefer [game-simulator-matrix.md](game-simulator-matrix.md). This file contains general drills, reusable scoring patterns, and example answers.
 
+For Showcase Showdown / Big Wheel spin-or-stay practice, use [showcase-showdown-guide.md](showcase-showdown-guide.md). Do not treat it like Showcase bidding or a pricing game.
+
 ## Selection Interview Drills
 
 ### 20-Second Hook

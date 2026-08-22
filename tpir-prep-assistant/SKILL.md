@@ -28,6 +28,7 @@ The goal is practical preparation, not a promise of selection or winnings. Be ex
 - For ready-to-run general drills and answer-key patterns, read [references/activity-bank.md](references/activity-bank.md).
 - For pricing-game simulator coverage, including every official-listed current game and current-season aliases, read [references/game-simulator-matrix.md](references/game-simulator-matrix.md).
 - For official openable game-board visuals and image links, read [references/game-visual-links.md](references/game-visual-links.md).
+- For Showcase Showdown / Big Wheel spin decisions, read [references/showcase-showdown-guide.md](references/showcase-showdown-guide.md).
 - For Christmas or holiday taping preparation, read [references/holiday-taping-guide.md](references/holiday-taping-guide.md).
 
 ## Output Patterns
