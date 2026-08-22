@@ -97,6 +97,6 @@ Reliability labels:
 
 - Selection: Prepare a concise, authentic personal hook; know your favorite game; be energetic without being pushy; listen during the interview process; make the shirt/group/theme memorable but not distracting.
 - Pricing: Practice retail prices by category and compare relative prices. Study current store prices for grocery items, household goods, electronics, appliances, furniture, trips, and vehicles.
-- Contestants Row: The core rule is closest bid without going over. Account for prior bids and the risk of overbidding; exact "one dollar over" tactics are situational and depend on bid order and confidence.
+- Contestants Row: The core rule is closest bid without going over. Account for prior bids and the risk of overbidding; exact "one dollar over" tactics are situational and depend on bid order and confidence. A `$1` bid should be interpreted as a strategic belief that all prior bids are too high unless the user states otherwise.
 - Showcase: Build bundle-estimation skill, not single-item recall. Practice summing trips, cars, furniture, appliances, and bonus items quickly.
 - Themed tapings: Themes can affect audience wardrobe, on-set energy, and sometimes prize framing. They do not let the user know which games or prizes will appear.

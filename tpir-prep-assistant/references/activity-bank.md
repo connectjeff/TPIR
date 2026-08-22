@@ -92,9 +92,11 @@ Evaluate:
 - Do they understand closest without going over?
 - Do they consider $1,251 only if they believe the item is above $1,250?
 - Do they avoid reflexively bidding $1 or $1 over without a price opinion?
+- If the user bids $1, assume they are saying all prior bids are too high unless they state a different reason.
 
 Example answer pattern:
 - Strong: "I think the TV is about $1,300, so $1,251 is worth it because it covers everything above the current high bid without overbidding if my estimate is right."
+- Strong: "$1, because I think the actual price is below every prior bid."
 - Weak: "Always bid $1 more." Coach that bid tactics depend on expected price and bid position.
 
 Variants:

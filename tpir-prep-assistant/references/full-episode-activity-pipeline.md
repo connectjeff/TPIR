@@ -96,6 +96,7 @@ Resolution:
 
 - Set an actual retail price before asking the user, but do not reveal it.
 - User wins if their bid is closest without going over.
+- Interpret a `$1` bid as the user's strategic belief that every prior bid is too high. Do not treat it as a joke, refusal, or unsupported answer unless the user says otherwise.
 - Continue to the next Contestants Row item if the user loses before exhausting attempts.
 - Stop the pipeline only if the user loses the final allowed Contestants Row attempt.
 - If every contestant overbids, all bids are invalid in show practice; for the pipeline, rerun a fresh Contestants Row item rather than eliminating the user on a table-wide overbid.
@@ -103,7 +104,7 @@ Resolution:
 Scoring:
 
 - 10 points and add item value if the user wins.
-- 0-2 coaching points for a lost attempt may be awarded for sound reasoning, but do not add item value.
+- 0-2 coaching points for a lost attempt may be awarded for sound reasoning, including a `$1` bid that correctly follows from a low-price read, but do not add item value.
 - If the user loses before the final attempt, keep the pipeline active and move to the next item.
 - If the user loses the final attempt, mark pipeline eliminated and give the correct bid logic.
 
@@ -114,6 +115,15 @@ Item: 65-inch midrange 4K TV.
 Actual retail price: $1,298.
 Prior bids: $850, $1,050, $1,250.
 Strong user bid: $1,251 if they believe the TV is above $1,250.
+```
+
+Example `$1` interpretation:
+
+```text
+Prior bids: $850, $1,100, $1,350.
+User bid: $1.
+Interpretation: the user believes the actual retail price is below $850.
+Coach the read based on the actual price; do not ask why they bid $1 unless the context is unclear.
 ```
 
 Example loss state before final attempt:
