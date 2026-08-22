@@ -2,6 +2,8 @@
 
 Use these activities interactively. Present one prompt, wait for the user's answer, then score and explain. Adjust difficulty based on the user's performance.
 
+For named pricing-game simulation, prefer [game-simulator-matrix.md](game-simulator-matrix.md). This file contains general drills, reusable scoring patterns, and example answers.
+
 ## Selection Interview Drills
 
 ### 20-Second Hook
@@ -56,6 +58,10 @@ Scoring:
 - 1 point for being within 20% of a reasonable current price.
 - Discuss why package size and brand tier matter.
 
+Example answer pattern:
+- Strong: "Toothpaste, ice cream, cereal, detergent, coffee pods, but detergent and coffee pods could swap depending on size and brand."
+- Coach: reward relative reasoning; ask what brand tier or package size would change the order.
+
 ### Small Prize Higher/Lower
 
 Show a target price and ask if the actual retail price is higher or lower.
@@ -67,6 +73,11 @@ Example:
 
 Teach the user to identify brand tier, material quality, power, capacity, and bundled accessories.
 
+Example answer pattern:
+- Meat thermometer at $22: likely higher for a premium instant-read model, lower for basic digital.
+- Garment steamer at $49: likely higher for a full-size steamer, near target for compact.
+- Electric toothbrush at $89: likely higher for premium rechargeable, lower for entry-level battery.
+
 ### Contestants Row Simulator
 
 Prompt:
@@ -77,6 +88,10 @@ Evaluate:
 - Do they understand closest without going over?
 - Do they consider $1,251 only if they believe the item is above $1,250?
 - Do they avoid reflexively bidding $1 or $1 over without a price opinion?
+
+Example answer pattern:
+- Strong: "I think the TV is about $1,300, so $1,251 is worth it because it covers everything above the current high bid without overbidding if my estimate is right."
+- Weak: "Always bid $1 more." Coach that bid tactics depend on expected price and bid position.
 
 Variants:
 - User bids first with uncertain item.
@@ -95,6 +110,12 @@ Give a bundle and ask for a 30-second total:
 Coaching:
 Have the user write rough category anchors before summing: trip, room, vehicle, extras. Penalize forgotten taxes/fees only if the game source uses them; generally train actual retail prize values, not personal purchase cost.
 
+Example answer pattern:
+- Trip: estimate a round-trip airfare plus hotel package, not just personal airfare.
+- Furniture: estimate retail set pricing, not clearance pricing.
+- Vehicle: anchor by class and model year.
+- Extras: include small decor and smart-light bundles but do not let them dominate the total.
+
 ## Pricing Game Scenario Drills
 
 ### Cliff Hangers
@@ -112,6 +133,11 @@ Prompt:
 
 Teach:
 Digits in car prices are 1-6 in the classic game setup. A roll of 1 that is not exact must be higher; a roll of 6 that is not exact must be lower. Middle digits require judgment.
+
+Example answer pattern:
+- If 1 is not exact, call higher.
+- If 6 is not exact, call lower.
+- For 2, 3, 4, 5, use car pricing context rather than a fixed rule.
 
 ### Lucky Seven
 
@@ -152,6 +178,9 @@ Prompt:
 
 Teach:
 The highest item usually does not simply go in the attic by itself in naive order. Look for sums that increase floor by floor.
+
+Example answer pattern:
+- Test combinations so each higher level is more expensive than the level below. A good simulator should ask the user to show the arithmetic, not just name an order.
 
 ### Switcheroo
 

@@ -24,7 +24,10 @@ The goal is practical preparation, not a promise of selection or winnings. Be ex
 ## Research Routing
 
 - For evidence, citations, and source caveats, read [references/source-notes.md](references/source-notes.md).
-- For ready-to-run drills, mock interviews, pricing games, and scenario prompts, read [references/activity-bank.md](references/activity-bank.md).
+- For contestant selection coaching, read [references/contestant-selection-guide.md](references/contestant-selection-guide.md).
+- For ready-to-run general drills and answer-key patterns, read [references/activity-bank.md](references/activity-bank.md).
+- For pricing-game simulator coverage, including every official-listed current game and current-season aliases, read [references/game-simulator-matrix.md](references/game-simulator-matrix.md).
+- For Christmas or holiday taping preparation, read [references/holiday-taping-guide.md](references/holiday-taping-guide.md).
 
 ## Output Patterns
 
