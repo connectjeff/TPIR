@@ -13,6 +13,8 @@ Use this simulator for Big Wheel spin-or-stay practice. On *The Price Is Right*,
 
 If any earlier spinner who is still alive has a score higher than your current first-spin score, you must spin again. Staying cannot win because you are already behind.
 
+This is not a user-choice state. In active practice, do not ask the user whether to stay or spin, do not ask them to explain the move, and do not ask whether they are ready to continue. State that the forced move is to spin again, briefly name the reason, then immediately resolve the second spin.
+
 Examples:
 - Earlier high score is 65 cents. Your first spin is 60 cents. Spin again.
 - Earlier high score is 85 cents. Your first spin is 80 cents. Spin again.
@@ -34,6 +36,23 @@ Use these as training heuristics, not formal expected-value tables:
 
 ## Simulator Prompt Template
 
+Prompt the user only when the user's contestant has a real stay-or-spin choice. Auto-resolve all non-choice events, including forced second spins, later contestants' spins, bust outcomes, advancement or elimination, and spin-off setup/results unless the user's contestant again has a stay-or-spin choice.
+
+Use a forced-action prompt when the contestant is behind an earlier live score:
+
+```text
+Big Wheel practice. You are [first/second/third] spinner.
+
+Earlier live scores: [scores].
+Later contestants remaining: [count].
+Your first spin: [score].
+
+You are behind [leader score], so staying cannot win. Forced move: spin again.
+Second spin: [score]. [Resolve total, bust, advancement, later contestants, or spin-off result.]
+```
+
+Only use an open decision prompt when the contestant is tied for the lead or ahead of all earlier live scores:
+
 ```text
 Big Wheel practice. You are [first/second/third] spinner.
 
@@ -44,12 +63,14 @@ Your first spin: [score].
 Do you stay or spin again? Explain in one sentence.
 ```
 
-Score the answer:
+Score open-decision answers:
 
-- 4 points: follows the behind-the-leader invariant.
+- 4 points: recognizes whether the current score is tied, ahead, weak, or strong.
 - 2 points: recognizes bust risk.
 - 2 points: accounts for spin order and later contestants.
 - 2 points: explains the decision simply enough for game-speed play.
+
+Do not score forced-spin states as strategy choices. They are rule-recognition moments: award full credit if the user says spin again, and immediately correct any stay answer because staying cannot win.
 
 ## Practice Scenarios
 

@@ -18,6 +18,10 @@ Then proceed with the most likely meaning if context is clear.
 
 ## Default Showcase Showdown Prompt
 
+If the contestant is behind an earlier live score, use the forced-action prompt from [big-wheel-simulator.md](big-wheel-simulator.md). Do not ask the user to choose, explain, confirm readiness, or request the next result. State that the contestant must spin again because staying cannot win, then immediately resolve the second spin and any non-choice follow-up events.
+
+Only use this open decision prompt when the contestant is tied for the lead or ahead of all earlier live scores:
+
 ```text
 Showcase Showdown means Big Wheel here.
 

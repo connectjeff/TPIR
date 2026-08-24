@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TPIR Practice Pipeline</title>
+    <meta
+      name="description"
+      content="Mobile practice app for a full TPIR-style simulation pipeline with attempt history and session reporting."
+    >
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div id="pullRefresh" class="pull-refresh" aria-hidden="true">Pull to refresh</div>
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">Independent practice aid</p>
+        <h1>TPIR Practice Pipeline</h1>
+      </div>
+      <nav class="header-actions" aria-label="Game controls">
+        <button id="newGame" type="button" aria-label="Start a new game" title="Start a new game">+</button>
+        <button id="practiceRow" type="button" aria-label="Practice Contestants Row" title="Practice Contestants Row">CR</button>
+        <button id="practiceWheel" type="button" aria-label="Practice Big Wheel" title="Practice Big Wheel">W</button>
+        <button id="practiceShowcase" type="button" aria-label="Practice Showcase" title="Practice Showcase">$</button>
+        <select id="practiceGameSelect" aria-label="Launch standalone pricing game practice" title="Launch standalone pricing game practice">
+          <option value="">Practice Game</option>
+        </select>
+        <button id="historyToggle" type="button" aria-label="Review game history" title="Review game history">≡</button>
+        <button id="clearSession" type="button" aria-label="Clear session history" title="Clear session history">x</button>
+      </nav>
+    </header>
+
+    <main class="app-shell">
+      <section class="status-panel" aria-label="Current game status">
+        <div class="score-strip">
+          <div>
+            <span class="label">Score</span>
+            <strong id="scoreValue">0</strong>
+          </div>
+          <div>
+            <span class="label">Winnings</span>
+            <strong id="winningsValue">$0</strong>
+          </div>
+          <div>
+            <span class="label">Row</span>
+            <strong id="rowValue">0/6</strong>
+          </div>
+        </div>
+        <div id="gateTrack" class="gate-track" aria-label="Pipeline gate progress"></div>
+      </section>
+
+      <section id="playSurface" class="play-surface" aria-live="polite"></section>
+
+      <section id="reportPanel" class="report-panel" aria-label="Session reporting"></section>
+      <section id="historyPanel" class="history-panel hidden" aria-label="Game history"></section>
+    </main>
+
+    <footer class="rights-note">
+      This independent practice app is not affiliated with, endorsed by, sponsored by, or approved by CBS,
+      Paramount Global, Fremantle, The Price Is Right, or related rights holders.
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>

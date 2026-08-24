@@ -14,6 +14,8 @@ The show, game boards, photographs, screenshots, video clips, graphics, episode 
 
 This repository does not include copied TPIR images, screenshots, video, audio, transcripts, or downloaded media assets. Where visual references are useful, the skill links to official TPIR pages or official image URLs hosted by the rights holder. Those links are provided as attribution and reference, not as a license grant.
 
+The mobile web app includes generated product-category practice images under `webapp/assets/anchors/`. These are original illustrative assets for simulated practice items and are not TPIR show media, game-board imagery, screenshots, logos, or trade dress.
+
 Do not commit downloaded TPIR media, copied screenshots, show clips, transcripts, or other copyrighted materials to this repository unless you have the necessary rights or written permission.
 
 ## Sources And Attribution

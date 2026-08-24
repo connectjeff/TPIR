@@ -86,7 +86,9 @@ Example answer pattern:
 
 ### Contestants Row Simulator
 
-Generate fresh items during practice. Do not reuse the example below or a recent prompt unless the user asks to replay it. Rotate item categories, bid positions, and opponent-bid patterns so the user has to reason from the item, visible bids, and turn order, not memory. In a multi-attempt Contestants Row pipeline, the user can bid first only on their first attempt; after any failed attempt, the newly called contestant bids first and the user can only bid second, third, or fourth.
+Generate fresh items during practice. Do not reuse the example below, documentation examples, common assistant defaults, or a recent prompt unless the user asks to replay it. At playtime, silently draft at least three candidate items from meaningfully different prize families and reject anything that resembles an earlier chat item before prompting. Rotate item families, bid positions, and opponent-bid patterns so the user has to reason from the item, visible bids, and turn order, not memory. In a multi-attempt Contestants Row pipeline, the user can bid first only on their first attempt; after any failed attempt, the newly called contestant bids first and the user can only bid second, third, or fourth.
+
+If the user reports repeated items, immediately treat that item family as stale for the rest of the session. In particular, do not use coffee, espresso, or beverage-machine bundles after the user has complained about repeated coffee/espresso prompts.
 
 Prompt:
 "Prize: 65-inch midrange 4K TV. Bids before you: $900, $1,100, $1,250. You bid last. What is your bid?"
@@ -119,13 +121,10 @@ Variants:
 - One bid is clearly low and one is close to expected retail.
 - Holiday bundle with decor, cookware, and gift cards.
 
-Scenario-generation categories:
-- Electronics and smart home.
-- Kitchen appliances and espresso/coffee gear.
-- Fitness, patio, outdoor, and hobby equipment.
-- Furniture, bedding, and decor.
-- Travel accessories and designer goods.
-- Music, photo, gaming, and creator gear.
+Scenario-generation prize families:
+- These are broad inspiration, not a closed taxonomy.
+- Use any plausible one-bid prize family: household goods, appliances, consumer electronics, furniture, decor, luggage, fashion accessories, sports and recreation, patio and garden, tools, instruments, creator gear, wellness devices, smart-home gear, hobby equipment, pet or family gear, seasonal packages, small local getaway packages, or another specific retail bundle that feels show-plausible.
+- Prefer concrete feature detail over generic labels, and avoid stale families from the visible chat.
 
 ### Showcase Bundle Builder
 

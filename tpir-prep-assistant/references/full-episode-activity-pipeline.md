@@ -89,10 +89,13 @@ Allowed attempts:
 
 Scenario generation:
 
-- Generate Contestants Row items from rules instead of reusing documentation examples.
-- Keep a `recent_items` list for the current session. Do not repeat an item, near-duplicate, or category if there are reasonable unused alternatives.
-- Do not reuse examples from this file, [activity-bank.md](activity-bank.md), or earlier chat turns unless the user explicitly asks to replay an example.
-- Rotate categories across attempts: electronics, kitchen appliances, fitness/outdoor, home furniture, travel accessories, music/photo gear, yard/patio, smart home, designer accessories, hobby equipment.
+- Generate Contestants Row items at playtime from rules instead of reusing documentation examples, common defaults, or prior assistant prompts.
+- Before prompting, silently draft at least three candidate items from meaningfully different prize families, reject anything that resembles documentation examples or earlier chat turns, then use one of the remaining candidates.
+- Keep a `recent_items` and `recent_categories` list for the current session and visible chat history. Do not repeat an item, near-duplicate, brand bundle, or category if there are reasonable unused alternatives.
+- Do not reuse examples from this file, [activity-bank.md](activity-bank.md), [holiday-taping-guide.md](holiday-taping-guide.md), or earlier chat turns unless the user explicitly asks to replay an example.
+- Treat repeated coffee, espresso, or similar beverage-machine bundles as stale prompts. Do not use them as the first Contestants Row item, and do not use them at all in a session where the user has complained about repeated coffee/espresso prompts.
+- Use prize families as broad inspiration, not a closed taxonomy. Contestants Row items can come from any plausible one-bid prize family, including but not limited to household goods, appliances, consumer electronics, furniture, decor, luggage, fashion accessories, sports and recreation, patio and garden, tools, instruments, creator gear, wellness devices, smart-home gear, hobby equipment, pet or family gear, seasonal packages, and small local getaway packages.
+- Do not let the examples or category labels dominate generation. Prefer a specific fresh item with concrete features over a generic category name.
 - Pick a hidden actual retail price before asking. Use realistic practice values, rounded to normal retail endings when helpful.
 - Generate three opponent bids around the hidden price so the user has a meaningful strategic choice. Use one of the bid patterns below.
 - Vary the user's bid position across attempts. Do not assume the user always bids last.
@@ -142,6 +145,18 @@ Contestants still to bid after you: [count]
 
 What is your bid?
 ```
+
+Freshness self-check before sending a Contestants Row prompt:
+
+```text
+Candidate prize family: [broad family].
+Reason it is fresh: [not used in this session, not a doc example, not a recent chat item].
+Hidden actual retail price set: yes.
+Opponent bid pattern set: yes.
+User bid position set: yes.
+```
+
+Do not show this self-check to the user. If the candidate fails any freshness check, discard it and generate a different item before prompting.
 
 Attempt-position examples:
 
@@ -255,6 +270,20 @@ Pipeline rule:
 
 Prompt pattern:
 
+If the user is behind an earlier live score, treat the second spin as forced:
+
+```text
+Big Wheel. You are [first/second/third] spinner.
+Earlier live scores: [scores].
+Later contestants remaining: [count].
+Your first spin: [score].
+
+You are behind [leader score], so staying cannot win. Forced move: spin again.
+Second spin: [score]. [Resolve total, bust, advancement, later contestants, or spin-off result.]
+```
+
+Only ask for a stay-or-spin decision when the user is tied for the lead or ahead of all earlier live scores:
+
 ```text
 Big Wheel. You are [first/second/third] spinner.
 Earlier live scores: [scores].
@@ -267,6 +296,10 @@ Do you stay or spin again? Explain in one sentence.
 Invariant:
 
 If any earlier live spinner has a higher total than the user's first spin, the user must spin again. Staying cannot win.
+
+Prompting rule:
+
+Only prompt the user when their contestant has an actual stay-or-spin choice. Auto-resolve forced second spins, later contestants' spins, busts, advancement or elimination, and spin-off outcomes unless the user's contestant faces another real stay-or-spin decision.
 
 ## Stage 5: Final Showcase Bidding
 

@@ -1,10 +1,12 @@
 # TPIR Prep Assistant
 
-An agent skill for helping someone prepare to attend a taping of *The Price Is Right*, get ready for the contestant-selection process, study likely prize and grocery prices, and practice pricing-game scenarios.
+Two practice surfaces for preparing for *The Price Is Right*: an interactive Codex skill for conversational coaching and a mobile-friendly web app for running the simulator pipeline in a browser.
 
 This repository is not affiliated with, endorsed by, sponsored by, or approved by CBS, Paramount Global, Fremantle, The Price Is Right, On Camera Audiences, or any related rights holder. *The Price Is Right* and related names, logos, game names, slogans, trade dress, and media are trademarks or copyrighted materials of their respective owners. This project uses those names only for nominative, descriptive, and educational reference.
 
 ## What It Does
+
+### Interactive Coding Agent Skill
 
 - Builds taping preparation plans.
 - Coaches short contestant-selection interview answers.
@@ -13,6 +15,14 @@ This repository is not affiliated with, endorsed by, sponsored by, or approved b
 - Includes simulator prompts for every game listed on the current official TPIR games page, plus current-season aliases found in the CBS Season 54 episode guide.
 - Adjusts preparation for themed tapings such as Christmas or holiday episodes.
 - Cites official sources, producer comments, contestant reports, and research where appropriate.
+
+### Mobile Web App
+
+- Runs a full practice pipeline from Contestants Row through the final Showcase.
+- Tracks only full-pipeline games in browser storage, with game history and min, max, and average winnings.
+- Includes untracked standalone practice launchers for Contestants Row, Big Wheel, Showcase, and each pricing-game simulator.
+- Uses static generated product-category assets for practice item visuals and links to public official TPIR game visuals where available.
+- Works as plain static files and can be served on a LAN for mobile play.
 
 ## Install
 
@@ -58,6 +68,32 @@ Quiz me on Contestants Row and Showcase bidding. Give me one scenario at a time.
 Help me write a 20-second selection interview answer. I am going with four coworkers and my favorite game is Plinko.
 ```
 
+## Web App
+
+The mobile web app lives in `webapp/`. It preserves the simulation flow from Contestants Row through the final Showcase, tracks full-pipeline sessions in browser storage, shows gate-by-gate progress, keeps completed game history, and reports min, max, and average winnings. The header also includes standalone practice launches for Contestants Row, Big Wheel, Showcase, and each pricing-game simulator; standalone practice does not aggregate into history or reports.
+
+Open `webapp/index.html` directly, or serve it locally from the repo root:
+
+```bash
+python3 -m http.server 8000
+```
+
+Then visit `http://localhost:8000/webapp/`.
+
+To play from another device on the same LAN, bind the server to all interfaces and open the host machine's LAN IP from the mobile device:
+
+```bash
+python3 -m http.server 8000 --bind 0.0.0.0
+```
+
+Example mobile URL:
+
+```text
+http://192.168.1.96:8000/webapp/
+```
+
+The app links to public official TPIR game visuals where available. It does not download, cache, transform, or commit third-party show media. Static generated product-category images under `webapp/assets/anchors/` are original practice-app assets, not TPIR show media.
+
 ## Sources
 
 The skill includes a source guide at `tpir-prep-assistant/references/source-notes.md`. It references official TPIR pages, On Camera Audiences ticket information, CBS episode listings, producer statements, former contestant reports, holiday press materials, and academic bidding research.
@@ -84,13 +120,19 @@ The MIT License applies only to original repository content. It does not grant r
 
 ## Validate
 
+Run the repository validation script to check both supported surfaces:
+
+```bash
+scripts/validate.sh
+```
+
 If you have the Codex skill validator available:
 
 ```bash
 python3 ~/.codex/skills/.system/skill-creator/scripts/quick_validate.py tpir-prep-assistant
 ```
 
-The validator checks basic skill structure. It does not verify that every tactical recommendation is current, so live taping details still need source checks.
+The skill validator checks basic skill structure. It does not verify that every tactical recommendation is current, so live taping details still need source checks. The repository validation script also checks that `webapp/app.js` parses and that referenced local web app image assets exist.
 
 ## Codex Contributors
 
