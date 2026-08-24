@@ -5,6 +5,9 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 repo_root="$(cd "$script_dir/.." && pwd)"
 cd "$repo_root"
 
+test -f VERSION
+grep -qxE '[0-9]+\.[0-9]+\.[0-9]+' VERSION
+
 echo "Validating Codex skill package..."
 if [[ -f "$HOME/.codex/skills/.system/skill-creator/scripts/quick_validate.py" ]]; then
   python3 "$HOME/.codex/skills/.system/skill-creator/scripts/quick_validate.py" tpir-prep-assistant

@@ -2,6 +2,8 @@
 
 Two practice surfaces for preparing for *The Price Is Right*: an interactive Codex skill for conversational coaching and a mobile-friendly web app for running the simulator pipeline in a browser.
 
+Current release: `0.1.0`. See [CHANGELOG.md](CHANGELOG.md) for release notes.
+
 This repository is not affiliated with, endorsed by, sponsored by, or approved by CBS, Paramount Global, Fremantle, The Price Is Right, On Camera Audiences, or any related rights holder. *The Price Is Right* and related names, logos, game names, slogans, trade dress, and media are trademarks or copyrighted materials of their respective owners. This project uses those names only for nominative, descriptive, and educational reference.
 
 ## What It Does
