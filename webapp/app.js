@@ -3786,7 +3786,7 @@
       <div class="stage-meta"><span class="pill">Showcase result</span></div>
       ${anchorImageCard("showcase", current.prizes.join("; "))}
       ${structuredResult ? `
-        <div class="showcase-result-grid ${current.winner === "user" ? "user-winner" : ""} ${current.doubleShowcaseWinner === "user" ? "double-winner" : ""}">
+        <div class="showcase-result-grid ${current.doubleShowcaseWinner === "user" ? "double-winner" : ""}">
           ${showcaseResultCard("Your showcase", current.prizes, current.userResult, current.doubleShowcaseWinner === "opponent" ? "also-won-opponent" : current.winner === "user" ? "winner-user" : current.winner === "tie" ? "tie" : "")}
           ${showcaseResultCard("Opponent showcase", current.opponentPrizes, current.opponentResult, current.doubleShowcaseWinner === "user" ? "also-won-user" : current.winner === "opponent" ? "winner-opponent" : current.winner === "tie" ? "tie" : "")}
         </div>
