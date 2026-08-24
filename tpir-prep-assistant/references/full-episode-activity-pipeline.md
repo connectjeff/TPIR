@@ -266,7 +266,7 @@ Pipeline rule:
 
 - If the user does not advance to the final Showcase, stop immediately.
 - If the user advances, award 10 points and continue.
-- Do not add money for the Big Wheel unless modeling a specific verified bonus outcome. In ordinary pipeline practice, Big Wheel affects advancement, not accumulated value.
+- Add $1,000 when the contestant reaches exactly $1.00 in one or two normal spins. Then resolve the bonus spin: add another $10,000 for 5 cents or 15 cents, another $25,000 for $1.00, and no additional cash for any other section. Ordinary Big Wheel outcomes affect advancement without adding money.
 
 Prompt pattern:
 

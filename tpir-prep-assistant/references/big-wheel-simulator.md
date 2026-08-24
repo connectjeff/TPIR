@@ -7,7 +7,12 @@ Use this simulator for Big Wheel spin-or-stay practice. On *The Price Is Right*,
 - A contestant may spin once or twice.
 - The goal is to have the highest total without going over $1.00.
 - A contestant who goes over $1.00 is out.
-- A contestant who hits exactly $1.00 usually earns a bonus spin under current show rules, but live rules and bonus amounts should be verified from current official sources before giving prize-specific claims.
+- A contestant who reaches exactly $1.00 in one or two normal spins wins $1,000 and receives a bonus spin.
+- Reaching $1.00 ends the contestant's normal turn. Do not offer a stay-or-spin choice and do not take another normal spin.
+- On the bonus spin, 5 cents and 15 cents are the green sections adjacent to $1.00. Either green section awards an additional $10,000; landing on $1.00 again awards an additional $25,000.
+- A contestant takes the bonus spin even when nobody else reaches $1.00; in that case it is for bonus cash and does not affect advancement.
+- If another contestant also reaches $1.00, each matched contestant's bonus spin also serves as the spin-off. The highest bonus-spin value advances, while each contestant keeps any cash won.
+- If matched bonus spins tie, run another one-spin spin-off. The later tie-break spin does not award another bonus.
 
 ## Non-Negotiable Decision Invariant
 
@@ -37,6 +42,8 @@ Use these as training heuristics, not formal expected-value tables:
 ## Simulator Prompt Template
 
 Prompt the user only when the user's contestant has a real stay-or-spin choice. Auto-resolve all non-choice events, including forced second spins, later contestants' spins, bust outcomes, advancement or elimination, and spin-off setup/results unless the user's contestant again has a stay-or-spin choice.
+
+Reaching $1.00, taking a bonus spin, and taking a spin-off spin are not choices. Resolve them automatically and show the complete sequence. Clearly distinguish the $1,000 award for reaching $1.00 from the additional $10,000 green-section and $25,000 dollar-section bonus-spin prizes.
 
 Use a forced-action prompt when the contestant is behind an earlier live score:
 
@@ -126,4 +133,8 @@ Good answer: stay is usually reasonable. You are not behind, and spinning risks 
 - Staying when an earlier live score is higher.
 - Ignoring whether later contestants remain.
 - Treating tie situations as automatic spin-again decisions.
+- Offering a normal second spin after the contestant has already reached $1.00.
+- Skipping the $1,000 award or mandatory bonus spin after a one-spin or two-spin total of $1.00.
+- Treating a solo contestant's bonus spin as a spin-off, or forgetting that matched $1.00 bonus spins also decide who advances.
+- Confusing the green 5-cent and 15-cent bonus sections with ordinary-spin targets.
 - Confusing the Big Wheel / Showcase Showdown with final Showcase bidding.

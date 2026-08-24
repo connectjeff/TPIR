@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Complete the Big Wheel dollar workflow with the $1,000 award, automatic bonus spins, green-section and repeat-dollar prizes, multi-contestant dollar spin-offs, repeat tie-breaks, cash tracking, and tiered celebration graphics.
+- Add a visual Big Wheel target guide for the red $1.00 section and adjacent green 5-cent and 15-cent bonus sections.
+
 ## 0.1.1 - 2026-08-23
 
 - Rework Showcase winner visuals with a green outline around only the package won for single wins, one shared green enclosure for double wins, a red opponent-winner outline, and distinct single- and double-win celebrations.

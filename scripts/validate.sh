@@ -22,11 +22,19 @@ echo "Validating web app..."
 test -f webapp/index.html
 test -f webapp/styles.css
 test -f webapp/app.js
+test -f webapp/wheel-rules.js
 node --check webapp/app.js
+node --check webapp/wheel-rules.js
+node scripts/test-wheel-rules.js
 
 node - <<'NODE'
 const fs = require("fs");
 const js = fs.readFileSync("webapp/app.js", "utf8");
+const html = fs.readFileSync("webapp/index.html", "utf8");
+if (html.indexOf("wheel-rules.js") === -1 || html.indexOf("wheel-rules.js") > html.indexOf("app.js")) {
+  console.error("wheel-rules.js must load before app.js");
+  process.exitCode = 1;
+}
 const paths = [...js.matchAll(/image: "([^"]+)"/g)]
   .map((match) => match[1])
   .filter((path) => path.startsWith("assets/"));

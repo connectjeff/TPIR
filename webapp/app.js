@@ -1,9 +1,13 @@
 (function () {
   "use strict";
 
+  const wheelRules = window.ShowcaseReadyWheelRules;
   const STORAGE_KEY = "tpirPracticeSession.v1";
   const MAX_ROW_ATTEMPTS = 6;
   const DOUBLE_SHOWCASE_THRESHOLD = 250;
+  const WHEEL_DOLLAR_BONUS = wheelRules.DOLLAR_BONUS;
+  const WHEEL_GREEN_BONUS = wheelRules.GREEN_BONUS;
+  const WHEEL_DOLLAR_JACKPOT = wheelRules.DOLLAR_JACKPOT;
 
   const gates = [
     { key: "row", label: "Row", full: "Contestants Row" },
@@ -2376,6 +2380,11 @@
       userTotal: firstSpin,
       log: []
     };
+    if (firstSpin === 100) {
+      game.current.log.push("You hit $1.00, so your normal turn is complete.");
+      resolveWheelAfterUser();
+      return;
+    }
     const leader = Math.max(0, ...earlier);
     if (leader > firstSpin) {
       const second = wheelSpin();
@@ -2394,7 +2403,8 @@
 
   function autoWheelTotal(target) {
     const first = wheelSpin();
-    if (first >= 80 && (!target || first > target)) return first;
+    if (first === 100) return first;
+    if (first >= 80 && (!target || first >= target)) return first;
     const second = wheelSpin();
     const total = first + second;
     return total > 100 ? 0 : total;
@@ -2407,6 +2417,49 @@
       current.userTotal = current.firstSpin + current.secondSpin;
     }
     resolveWheelAfterUser();
+  }
+
+  function spinOffRoundsSummary(rounds) {
+    if (!rounds || !rounds.length) return "";
+    return rounds.map((round, index) => {
+      const opponentBest = Math.max(0, ...round.opponentSpins);
+      return `Spin-off ${index + 1}: you ${formatCents(round.userSpin)}, opponent best ${formatCents(opponentBest)}.`;
+    }).join(" ");
+  }
+
+  function applyWheelDollarAward(current, dollar) {
+    if (!dollar) return;
+    current.dollarHit = true;
+    current.dollarSource = dollar.source;
+    current.bonusSpin = dollar.userSpin;
+    current.bonusOpponentSpins = dollar.opponentSpins;
+    current.bonusCash = dollar.bonusCash;
+    current.wheelCash = wheelRules.totalCashForDollar(dollar.userSpin);
+    current.bonusTieBreakRounds = dollar.tieBreakRounds;
+
+    if (!game.practice) {
+      game.accumulatedValue += current.wheelCash;
+      game.wonPrizes.push(`Big Wheel cash (${money(current.wheelCash)})`);
+    }
+  }
+
+  function wheelDollarDetail(current, dollar) {
+    const parts = [`You hit $1.00 ${dollar.source === "spin-off" ? "in the spin-off " : ""}and won ${money(WHEEL_DOLLAR_BONUS)}.`];
+    if (dollar.opponentCount > 0) {
+      parts.push(`${dollar.opponentCount === 1 ? "One opponent also hit" : `${dollar.opponentCount} opponents also hit`} $1.00, so the bonus spins also served as the spin-off.`);
+      parts.push(`Bonus-spin scores: you ${formatCents(dollar.userSpin)}, opponent best ${formatCents(Math.max(...dollar.opponentSpins))}.`);
+    } else {
+      parts.push("No opponent matched $1.00, so the bonus spin was for cash only.");
+    }
+    if (dollar.userSpin === 100) {
+      parts.push(`Your bonus spin landed on $1.00 for the ${money(WHEEL_DOLLAR_JACKPOT)} top bonus.`);
+    } else if (dollar.userSpin === 5 || dollar.userSpin === 15) {
+      parts.push(`Your bonus spin landed on the green ${formatCents(dollar.userSpin)} section for ${money(WHEEL_GREEN_BONUS)}.`);
+    } else {
+      parts.push(`Your bonus spin landed on ${formatCents(dollar.userSpin)}, so there was no additional cash bonus.`);
+    }
+    if (dollar.tieBreakRounds.length) parts.push(spinOffRoundsSummary(dollar.tieBreakRounds));
+    return parts.join(" ");
   }
 
   function resolveWheelAfterUser() {
@@ -2423,8 +2476,27 @@
       laterTotals.push(autoWheelTotal(current.userTotal));
     }
     current.laterTotals = laterTotals;
-    const bestOpponent = Math.max(0, ...current.earlier, ...laterTotals);
-    const won = current.userTotal > bestOpponent || resolveSpinOff(current.userTotal, bestOpponent);
+    const opponentTotals = [...current.earlier, ...laterTotals];
+    const bestOpponent = Math.max(0, ...opponentTotals);
+    const tiedOpponents = opponentTotals.filter((total) => total === current.userTotal).length;
+    let won = current.userTotal > bestOpponent;
+    let dollar = null;
+    let spinOffRounds = [];
+
+    if (current.userTotal === 100) {
+      dollar = wheelRules.resolveDollarBonus(opponentTotals.filter((total) => total === 100).length, "showdown", wheelSpin);
+      won = dollar.won;
+    } else if (current.userTotal === bestOpponent) {
+      const spinOff = wheelRules.resolveSpinOff(tiedOpponents, true, wheelSpin);
+      won = spinOff.won;
+      spinOffRounds = spinOff.rounds;
+      dollar = spinOff.dollar;
+    }
+
+    current.spinOffRounds = spinOffRounds;
+    applyWheelDollarAward(current, dollar);
+    const dollarDetail = dollar ? wheelDollarDetail(current, dollar) : "";
+    const spinOffDetail = !dollar && spinOffRounds.length ? spinOffRoundsSummary(spinOffRounds) : "";
 
     if (won) {
       const opponentResult = bestOpponent === 0
@@ -2433,18 +2505,19 @@
       if (!game.practice) game.score += 10;
       passGate("wheel");
       if (!game.practice) game.gates.showcase = "active";
-      game.events.push({
-        title: "Big Wheel",
-        detail: `Advanced with ${formatCents(current.userTotal)}. ${opponentResult}`,
-        result: "passed"
-      });
-      showWheelResult(true, `You advanced with ${formatCents(current.userTotal)}. ${opponentResult}`, current);
+      const detail = dollarDetail || spinOffDetail
+        ? `${dollarDetail || spinOffDetail} You advanced. ${opponentResult}`
+        : `You advanced with ${formatCents(current.userTotal)}. ${opponentResult}`;
+      showWheelResult(true, detail, current);
       render();
       return;
     }
 
     game.gates.wheel = "failed";
-    showWheelResult(false, wheelResultDetail(current, bestOpponent, false), current);
+    const detail = dollarDetail || spinOffDetail
+      ? `${dollarDetail || spinOffDetail} You were eliminated in the spin-off.`
+      : wheelResultDetail(current, bestOpponent, false);
+    showWheelResult(false, detail, current);
     render();
   }
 
@@ -2486,14 +2559,6 @@
     }
     finishGame();
     render();
-  }
-
-  function resolveSpinOff(userTotal, opponentTotal) {
-    if (userTotal !== opponentTotal) return false;
-    const userSpin = wheelSpin();
-    const opponentSpin = wheelSpin();
-    game.current.spinOff = { userSpin, opponentSpin };
-    return userSpin >= opponentSpin;
   }
 
   function startShowcase() {
@@ -2734,10 +2799,14 @@
     return `
       <figure class="visual-card wheel-score-card">
         <div class="wheel-score-visual">
-          <div class="dollar-cap">$1.00</div>
+          <div class="wheel-bonus-targets" aria-label="Bonus spin prize sections">
+            <div class="green"><strong>5¢</strong><span>${money(WHEEL_GREEN_BONUS)}</span></div>
+            <div class="dollar"><strong>$1.00</strong><span>${money(WHEEL_DOLLAR_JACKPOT)}</span></div>
+            <div class="green"><strong>15¢</strong><span>${money(WHEEL_GREEN_BONUS)}</span></div>
+          </div>
           ${spinnerRows}
         </div>
-        <figcaption>Big Wheel guide: highest total at or below $1.00 advances. Over $1.00 is out.</figcaption>
+        <figcaption><strong>Regular spins:</strong> aim for a total of exactly $1.00 without going over. <strong>Bonus spin:</strong> target the red $1.00 section for ${money(WHEEL_DOLLAR_JACKPOT)} or either adjacent green section, 5¢ and 15¢, for ${money(WHEEL_GREEN_BONUS)}.</figcaption>
       </figure>
     `;
   }
@@ -3685,11 +3754,40 @@
     `;
   }
 
+  function wheelPrizeCelebration(wheelState) {
+    if (!wheelState || !wheelState.dollarHit) return "";
+    const jackpot = wheelState.bonusSpin === 100;
+    const greenBonus = wheelState.bonusSpin === 5 || wheelState.bonusSpin === 15;
+    const title = jackpot
+      ? "Bonus-spin jackpot!"
+      : greenBonus
+        ? "Green-section bonus!"
+        : "You hit $1.00!";
+    const message = jackpot
+      ? `Another $1.00 wins ${money(WHEEL_DOLLAR_JACKPOT)}. Total Big Wheel cash: ${money(wheelState.wheelCash)}.`
+      : greenBonus
+        ? `${formatCents(wheelState.bonusSpin)} wins ${money(WHEEL_GREEN_BONUS)}. Total Big Wheel cash: ${money(wheelState.wheelCash)}.`
+        : `${money(WHEEL_DOLLAR_BONUS)} won for reaching exactly $1.00. Bonus spin: ${formatCents(wheelState.bonusSpin)}.`;
+    const icons = jackpot
+      ? `<span>★</span><span>✦</span><span>🏆</span><span>✦</span><span>★</span>`
+      : greenBonus
+        ? `<span>★</span><span>$</span><span>★</span>`
+        : `<span>★</span><span>★</span>`;
+    return `
+      <div class="outcome win showcase-celebration wheel-prize-celebration ${jackpot ? "double-showcase" : greenBonus ? "wheel-green-bonus" : "single-showcase"}">
+        <div class="celebration-icons ${jackpot ? "double" : "single"}" aria-hidden="true">${icons}</div>
+        <h2>${title}</h2>
+        <p>${message}</p>
+      </div>
+    `;
+  }
+
   function renderWheelResult(current) {
     const buttonText = game && game.practice ? "Practice Again" : current.won ? "Continue to Showcase" : "Save Result";
     els.play.innerHTML = `
       <div class="stage-meta"><span class="pill">Big Wheel result</span></div>
       ${current.wheelState ? wheelPracticeVisualCard(current.wheelState) : ""}
+      ${wheelPrizeCelebration(current.wheelState)}
       <div class="outcome ${current.won ? "win" : "loss"}">
         <h2>${current.won ? "You advanced" : "Big Wheel elimination"}</h2>
         <p>${escapeHtml(current.detail)}</p>
@@ -3982,5 +4080,11 @@
 
   hydratePracticeGameSelect();
   setupPullToRefresh();
-  render();
+  if (game && game.current && game.current.type === "wheel" && game.current.userTotal === 100) {
+    game.current.log = game.current.log || [];
+    game.current.log.push("You hit $1.00, so your normal turn is complete.");
+    resolveWheelAfterUser();
+  } else {
+    render();
+  }
 }());

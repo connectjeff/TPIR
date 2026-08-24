@@ -4,7 +4,7 @@ Use these notes to ground TPIR preparation advice. Cite the original sources whe
 
 Respect third-party rights. Use source links for attribution, summarize in original language, avoid long copied passages, and do not imply that this repository owns or licenses TPIR/CBS/Fremantle/Paramount materials. The repository MIT License applies only to original skill content.
 
-Last researched: 2026-08-22.
+Last researched: 2026-08-23.
 
 Reliability labels:
 - Official: show, network, studio, or audience-coordinator pages.
@@ -70,6 +70,10 @@ Reliability labels:
   Anecdotal from contestant Krupali. Use for practical advice such as being fun, enthusiastic, energetic, dancing/meeting people, and being there to enjoy the experience.
 
 ## Strategy And Research Sources
+
+- Wikipedia, *The Price Is Right*, Showcase Showdown rules: https://en.wikipedia.org/wiki/The_Price_Is_Right
+  Label: Fan-maintained current-rule summary. Last checked: 2026-08-23.
+  Use for the current daytime Big Wheel bonus amounts and tie workflow when an official daytime rulebook is unavailable: $1,000 for reaching exactly $1.00, an additional $10,000 for a 5-cent or 15-cent bonus spin, and an additional $25,000 for a $1.00 bonus spin. It also documents that matched $1.00 bonus spins serve as the spin-off and that a remaining tie proceeds to a no-bonus spin-off. Re-check these amounts for special episodes.
 
 - Berk, Hughson, and Vandezande, "The Price Is Right, But Are the Bids? An Empirical Investigation of Rational Decision Making," American Economic Review, 1996: https://www.gsb.stanford.edu/faculty-research/publications/price-right-are-bids-empirical-investigation-rational-decision-making  
   Label: Academic. Last checked: 2026-08-22.
