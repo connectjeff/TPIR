@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.1.1 - 2026-08-23
+
 - Rework Showcase winner visuals with a green outline around only the package won for single wins, one shared green enclosure for double wins, a red opponent-winner outline, and distinct single- and double-win celebrations.
 - Award both prize packages when the winning Showcase bid is within $250 without going over, and clearly identify double-showcase wins in the result view.
 - Rename the mobile web app to **Showcase Ready** across the interface, browser title, and project documentation.
