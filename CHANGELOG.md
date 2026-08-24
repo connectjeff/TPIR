@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.1.2 - 2026-08-23
+
 - Complete the Big Wheel dollar workflow with the $1,000 award, automatic bonus spins, green-section and repeat-dollar prizes, multi-contestant dollar spin-offs, repeat tie-breaks, cash tracking, and tiered celebration graphics.
 - Add a visual Big Wheel target guide for the red $1.00 section and adjacent green 5-cent and 15-cent bonus sections.
 
