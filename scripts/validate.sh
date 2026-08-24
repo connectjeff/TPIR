@@ -33,6 +33,28 @@ if (missing.length) {
   console.log(missing.join("\n"));
   process.exitCode = 1;
 }
+
+const leakedAnswerPatterns = [
+  'sub: "Too low"',
+  'sub: "First over"',
+  'sub: "Too late"',
+  'sub: "Low for airfare and hotel"',
+  'value: "6 x $3.49"',
+  'sub: "$20.94 total"'
+];
+const leaked = leakedAnswerPatterns.filter((pattern) => js.includes(pattern));
+if (leaked.length) {
+  console.error("Pre-decision answer hints or hidden prices found:");
+  console.error(leaked.join("\n"));
+  process.exitCode = 1;
+}
+
+for (const required of ["buildVendOPriceRound", "submitVendOPriceShelf", "continueVendOPrice"]) {
+  if (!js.includes(`function ${required}`)) {
+    console.error(`Missing dedicated hidden-answer flow: ${required}`);
+    process.exitCode = 1;
+  }
+}
 NODE
 
 echo "All validations passed."

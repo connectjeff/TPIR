@@ -564,6 +564,73 @@ h3 {
   grid-column: 1 / -1;
 }
 
+.vend-shelves {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.vend-shelf-choice,
+.vend-shelf-result {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  padding: 11px 12px;
+  border: 2px solid #ddd5c7;
+  border-radius: 8px;
+  background: #fffdf8;
+  color: var(--ink);
+  text-align: left;
+}
+
+.vend-shelf-choice {
+  cursor: pointer;
+}
+
+.vend-shelf-choice:active {
+  border-color: var(--accent);
+  background: #fff1f3;
+}
+
+.vend-shelf-choice span,
+.vend-shelf-result span {
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.vend-shelf-choice strong,
+.vend-shelf-result strong {
+  font-size: 1.2rem;
+}
+
+.vend-shelf-choice small,
+.vend-shelf-result small {
+  font-size: 0.9rem;
+  font-weight: 750;
+}
+
+.vend-shelf-result b {
+  margin-top: 4px;
+  color: var(--muted);
+}
+
+.vend-shelf-result.selected {
+  border-color: var(--blue);
+}
+
+.vend-shelf-result.winner {
+  border-color: var(--green);
+  background: #edf7f1;
+}
+
+@media (min-width: 620px) {
+  .vend-shelves {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
 .visual-card {
   margin: 0 0 10px;
   overflow: hidden;

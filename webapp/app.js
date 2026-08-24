@@ -595,8 +595,7 @@
     "squeezePlay",
     "switch",
     "takeTwo",
-    "thatsTooMuch",
-    "vendOPrice"
+    "thatsTooMuch"
   ]);
 
   const anchorVisuals = {
@@ -1142,6 +1141,8 @@
       game.current = buildCliffHangersRound();
     } else if (gameType === "fivePriceTags") {
       game.current = buildFivePriceTagsRound();
+    } else if (gameType === "vendOPrice") {
+      game.current = buildVendOPriceRound();
     } else if (gameType === "flipFlop") {
       const options = [
         { shown: "6947", actual: 6974, prize: "trip for two to Charleston, 5 nights, airfare included" },
@@ -1277,6 +1278,24 @@
     };
   }
 
+  function buildVendOPriceRound() {
+    return {
+      type: "prize",
+      gameType: "vendOPrice",
+      vendOPrice: true,
+      title: "Vend-O-Price",
+      prize: "home office package with standing desk, ergonomic chair, monitor, and accessories",
+      prizeValue: 6498,
+      phase: "choose",
+      selectedShelf: null,
+      shelves: [
+        { key: "A", quantity: 8, item: "boxes of imported bronze-cut pasta", unitCents: 429 },
+        { key: "B", quantity: 5, item: "jars of premium almond butter", unitCents: 849 },
+        { key: "C", quantity: 3, item: "bags of small-batch whole-bean coffee", unitCents: 1349 }
+      ]
+    };
+  }
+
   function richGameSample(gameType) {
     const samples = {
       balanceGame: {
@@ -1307,8 +1326,8 @@
         prize: "trip for two to Charleston, 5 nights, airfare included",
         prompt: "Choose whether the reversible price should read coming or going.",
         board: [
-          { label: "Coming", value: "$6,742", sub: "Trip-scale price" },
-          { label: "Going", value: "$2,476", sub: "Low for airfare and hotel" }
+          { label: "Coming", value: "$6,742", sub: "Reversible board option" },
+          { label: "Going", value: "$2,476", sub: "Reversible board option" }
         ],
         choices: ["Coming: $6,742", "Going: $2,476"],
         actual: 6742,
@@ -1477,28 +1496,16 @@
         prize: "2026 midsize SUV",
         prompt: "Stop at the first price that is more than the actual retail price.",
         board: [
-          { label: "1", value: "$29,480", sub: "Too low" },
-          { label: "2", value: "$31,620", sub: "Too low" },
-          { label: "3", value: "$34,950", sub: "Too low" },
-          { label: "4", value: "$37,110", sub: "First over" },
-          { label: "5", value: "$40,280", sub: "Too late" }
+          { label: "1", value: "$29,480", sub: "Displayed car price" },
+          { label: "2", value: "$31,620", sub: "Displayed car price" },
+          { label: "3", value: "$34,950", sub: "Displayed car price" },
+          { label: "4", value: "$37,110", sub: "Displayed car price" },
+          { label: "5", value: "$40,280", sub: "Displayed car price" }
         ],
         choices: ["Stop at $37,110", "Stop at $31,620", "Wait until $40,280"],
         actual: 35240,
         explanation: "$37,110 is the first displayed price above the SUV's actual retail price."
       },
-      vendOPrice: {
-        prize: "home office package",
-        prompt: "Choose the vending shelf with the highest total.",
-        board: [
-          { label: "Shelf A", value: "6 x $3.49", sub: "$20.94 total" },
-          { label: "Shelf B", value: "4 x $5.99", sub: "$23.96 total" },
-          { label: "Shelf C", value: "3 x $8.99", sub: "$26.97 total" }
-        ],
-        choices: ["Shelf C", "Shelf B", "Shelf A"],
-        actual: 2697,
-        explanation: "Shelf C has fewer items, but its unit price makes the highest total."
-      }
     };
     return samples[gameType] || documentedGameSample(gameType);
   }
@@ -2008,12 +2015,6 @@
         choices: ["Stop at $37,110", "Stop at $31,620", "Wait until $40,280"],
         actual: 35240
       },
-      vendOPrice: {
-        prize: "home office package",
-        visible: "Shelf A: 6 soups at $3.49. Shelf B: 4 granolas at $5.99. Shelf C: 3 coffees at $8.99. Choose the highest shelf total.",
-        choices: ["Shelf C", "Shelf B", "Shelf A"],
-        actual: 2697
-      }
     };
     return samples[gameType] || fallbackSamples[gameType] || {
       prize: basePrize,
@@ -2248,6 +2249,35 @@
       : "No car-price picks were earned.";
     const detail = `${won ? "Won" : "Lost"} Five Price Tags. Earned ${current.earnedPicks} car-price pick${current.earnedPicks === 1 ? "" : "s"}. ${tagSummary} Car actual retail price ${money(current.actual)}. ${smallPrizeSummary}.`;
     completePrizeRound(won, detail, current.prize, won ? current.actual : 0);
+  }
+
+  function submitVendOPriceShelf(value) {
+    const current = game.current;
+    if (!current || !current.vendOPrice || current.phase !== "choose") return;
+    const shelf = current.shelves.find((entry) => entry.key === value);
+    if (!shelf) return;
+    current.selectedShelf = shelf.key;
+    current.winningShelf = current.shelves.reduce((best, entry) =>
+      entry.quantity * entry.unitCents > best.quantity * best.unitCents ? entry : best
+    );
+    current.won = shelf.key === current.winningShelf.key;
+    current.phase = "reveal";
+    render();
+  }
+
+  function continueVendOPrice() {
+    const current = game.current;
+    if (!current || !current.vendOPrice || current.phase !== "reveal") return;
+    const calculations = current.shelves.map((shelf) =>
+      `Shelf ${shelf.key}: ${shelf.quantity} ${shelf.item} at unit actual retail price ${groceryMoney(shelf.unitCents)} each, total ${groceryMoney(shelf.quantity * shelf.unitCents)}`
+    ).join("; ");
+    const detail = `${current.won ? "Won" : "Lost"} Vend-O-Price by choosing Shelf ${current.selectedShelf}. ` +
+      `Shelf ${current.winningShelf.key} had the highest total. ${calculations}.`;
+    completePrizeRound(current.won, detail, current.prize, current.won ? current.prizeValue : 0);
+  }
+
+  function groceryMoney(cents) {
+    return `$${(cents / 100).toFixed(2)}`;
   }
 
   function submitPlinkoChoice(itemIndex, value) {
@@ -3381,6 +3411,50 @@
       return;
     }
 
+    if (current.vendOPrice) {
+      els.play.innerHTML = `
+        <div class="stage-meta"><span class="pill">Prize round</span><span class="pill">Vend-O-Price</span></div>
+        ${pricingLayout(
+          `${visualCard("prize", officialGameVisuals.vendOPrice)}${anchorImageCard("home office", current.prize)}`,
+          `<h2>Vend-O-Price</h2>
+          <p class="muted">Choose the shelf with the highest total value. Before you choose, only the product and quantity are visible.</p>
+          ${current.phase === "choose" ? `
+            <div class="vend-shelves" aria-label="Vend-O-Price shelves">
+              ${current.shelves.map((shelf) => `
+                <button type="button" class="vend-shelf-choice" data-action="vendShelf" data-value="${shelf.key}">
+                  <span>Shelf ${shelf.key}</span>
+                  <strong>${shelf.quantity} items</strong>
+                  <small>${escapeHtml(shelf.item)}</small>
+                </button>
+              `).join("")}
+            </div>
+          ` : `
+            <div class="vend-shelves reveal" aria-label="Vend-O-Price shelf results">
+              ${current.shelves.map((shelf) => {
+                const total = shelf.quantity * shelf.unitCents;
+                const winner = shelf.key === current.winningShelf.key;
+                const selected = shelf.key === current.selectedShelf;
+                return `
+                  <div class="vend-shelf-result ${winner ? "winner" : ""} ${selected ? "selected" : ""}">
+                    <span>Shelf ${shelf.key}${selected ? " - your choice" : ""}</span>
+                    <strong>${shelf.quantity} x ${groceryMoney(shelf.unitCents)}</strong>
+                    <small>${escapeHtml(shelf.item)}</small>
+                    <b>${groceryMoney(total)} total${winner ? " - highest" : ""}</b>
+                  </div>
+                `;
+              }).join("")}
+            </div>
+            <div class="outcome ${current.won ? "win" : "loss"}">
+              <h3>${current.won ? "You chose the highest shelf" : `Shelf ${current.winningShelf.key} was higher`}</h3>
+              <p>Unit actual retail prices and totals are revealed only after your selection.</p>
+            </div>
+            <button class="primary continue-button" type="button" data-action="continueVendOPrice">See Game Result</button>
+          `}`
+        )}
+      `;
+      return;
+    }
+
     if (current.plinko) {
       const item = current.items[current.currentIndex];
       const priced = Object.keys(current.answers).length;
@@ -3768,6 +3842,8 @@
     if (action === "fivePriceTruth") submitFivePriceTagsTrueFalse(target.dataset.value);
     if (action === "continueFivePriceTags") continueFivePriceTags();
     if (action === "fivePriceTag") selectFivePriceTag(target.dataset.value);
+    if (action === "vendShelf") submitVendOPriceShelf(target.dataset.value);
+    if (action === "continueVendOPrice") continueVendOPrice();
     if (action === "plinkoPrice") submitPlinkoChoice(Number(target.dataset.index), target.dataset.value);
     if (action === "continuePlinko") continuePlinko();
     if (action === "plinkoDrop") dropPlinkoChip(target.dataset.value);
