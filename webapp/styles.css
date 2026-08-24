@@ -505,6 +505,65 @@ h3 {
   text-align: center;
 }
 
+.shown-price-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 9px 0;
+  padding: 10px 12px;
+  border: 1px solid #ddd5c7;
+  border-radius: 8px;
+  background: #fffdf8;
+}
+
+.shown-price-card strong {
+  font-size: 1.5rem;
+}
+
+.truth-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.truth-grid button,
+.price-tag-grid button {
+  min-height: 46px;
+  border: 0;
+  border-radius: 8px;
+  color: white;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.truth-grid .true {
+  background: var(--green);
+}
+
+.truth-grid .false {
+  background: var(--bad);
+}
+
+.price-tag-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.price-tag-grid button {
+  background: var(--accent);
+}
+
+.price-tag-grid button:disabled {
+  background: #ddd7cd;
+  color: #81796d;
+}
+
+.price-tag-grid button:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
 .visual-card {
   margin: 0 0 10px;
   overflow: hidden;

@@ -1140,6 +1140,8 @@
       game.current = buildAnyNumberRound();
     } else if (gameType === "cliffHangers") {
       game.current = buildCliffHangersRound();
+    } else if (gameType === "fivePriceTags") {
+      game.current = buildFivePriceTagsRound();
     } else if (gameType === "flipFlop") {
       const options = [
         { shown: "6947", actual: 6974, prize: "trip for two to Charleston, 5 nights, airfare included" },
@@ -1247,6 +1249,30 @@
         { name: "compact personal blender with travel cup", actual: 32 },
         { name: "ionic hair dryer with diffuser and concentrator", actual: 45 },
         { name: "instant-read digital kitchen thermometer", actual: 28 }
+      ]
+    };
+  }
+
+  function buildFivePriceTagsRound() {
+    return {
+      type: "prize",
+      gameType: "fivePriceTags",
+      fivePriceTags: true,
+      title: "Five Price Tags",
+      prize: "2026 compact SUV",
+      actual: 31280,
+      tags: [28450, 31280, 34990, 37650, 42100],
+      currentIndex: 0,
+      phase: "trueFalse",
+      earnedPicks: 0,
+      picksRemaining: 0,
+      selectedTags: [],
+      history: [],
+      items: [
+        { name: "rechargeable wine opener and foil cutter", shown: 55, actual: 48, anchor: "espresso" },
+        { name: "compact countertop ice maker", shown: 119, actual: 119, anchor: "espresso" },
+        { name: "heated electric lunch box with containers", shown: 28, actual: 35, anchor: "cookware" },
+        { name: "handheld garment steamer with travel case", shown: 64, actual: 64, anchor: "air care" }
       ]
     };
   }
@@ -1584,13 +1610,6 @@
         visible: "Cross paths can make espresso/patio prices of $2,149/$3,760, $4,976/$1,320, or $1,498/$7,632.",
         choices: ["$2,149 and $3,760", "$4,976 and $1,320", "$1,498 and $7,632"],
         actual: 5909
-      },
-      fivePriceTags: {
-        prize: "2026 compact SUV",
-        prompt: "Earn car-price picks from true/false small-prize decisions, then pick the actual car price tag.",
-        visible: "Price tags: $28,450, $31,280, $34,990, $37,650, $42,100.",
-        choices: ["$31,280", "$42,100", "$28,450"],
-        actual: 31280
       },
       gasMoney: {
         prize: "2026 midsize sedan",
@@ -2157,6 +2176,78 @@
 
   function cliffHangersPriceSummary(current) {
     return current.history.map((entry) => `${entry.name}: guessed ${money(entry.guess)}, actual retail price ${money(entry.actual)}, ${entry.miss} step${entry.miss === 1 ? "" : "s"}`).join("; ");
+  }
+
+  function submitFivePriceTagsTrueFalse(value) {
+    const current = game.current;
+    if (!current || !current.fivePriceTags || current.phase !== "trueFalse") return;
+    const item = current.items[current.currentIndex];
+    const statementIsTrue = item.shown === item.actual;
+    const answer = value === "true";
+    const correct = answer === statementIsTrue;
+    if (correct) current.earnedPicks += 1;
+    current.lastReveal = { ...item, answer, correct, statementIsTrue };
+    current.history.push(current.lastReveal);
+    current.phase = "trueFalseReveal";
+    render();
+  }
+
+  function continueFivePriceTags() {
+    const current = game.current;
+    if (!current || !current.fivePriceTags) return;
+    if (current.phase === "trueFalseReveal") {
+      if (current.currentIndex < current.items.length - 1) {
+        current.currentIndex += 1;
+        current.phase = "trueFalse";
+        current.lastReveal = null;
+        render();
+        return;
+      }
+      if (current.earnedPicks === 0) {
+        finishFivePriceTags(false);
+        return;
+      }
+      current.picksRemaining = current.earnedPicks;
+      current.phase = "tags";
+      current.lastReveal = null;
+      render();
+      return;
+    }
+    if (current.phase !== "tagReveal") return;
+    if (current.lastTag.correct) {
+      finishFivePriceTags(true);
+      return;
+    }
+    if (current.picksRemaining === 0) {
+      finishFivePriceTags(false);
+      return;
+    }
+    current.phase = "tags";
+    current.lastTag = null;
+    render();
+  }
+
+  function selectFivePriceTag(value) {
+    const current = game.current;
+    const selected = wholeDollar(value);
+    if (!current || !current.fivePriceTags || current.phase !== "tags" || current.selectedTags.includes(selected)) return;
+    current.selectedTags.push(selected);
+    current.picksRemaining -= 1;
+    current.lastTag = { selected, correct: selected === current.actual };
+    current.phase = "tagReveal";
+    render();
+  }
+
+  function finishFivePriceTags(won) {
+    const current = game.current;
+    const smallPrizeSummary = current.history.map((entry) =>
+      `${entry.name}: shown ${money(entry.shown)}, actual retail price ${money(entry.actual)}, ${entry.correct ? "correct" : "incorrect"}`
+    ).join("; ");
+    const tagSummary = current.selectedTags.length
+      ? `Price tags selected: ${current.selectedTags.map(money).join(", ")}.`
+      : "No car-price picks were earned.";
+    const detail = `${won ? "Won" : "Lost"} Five Price Tags. Earned ${current.earnedPicks} car-price pick${current.earnedPicks === 1 ? "" : "s"}. ${tagSummary} Car actual retail price ${money(current.actual)}. ${smallPrizeSummary}.`;
+    completePrizeRound(won, detail, current.prize, won ? current.actual : 0);
   }
 
   function submitPlinkoChoice(itemIndex, value) {
@@ -3236,6 +3327,60 @@
       return;
     }
 
+    if (current.fivePriceTags) {
+      const item = current.items[current.currentIndex];
+      const inTagPhase = current.phase === "tags" || current.phase === "tagReveal";
+      const reveal = current.lastReveal;
+      els.play.innerHTML = `
+        <div class="stage-meta"><span class="pill">Prize round</span><span class="pill">Five Price Tags</span></div>
+        ${pricingLayout(
+          `${visualCard("prize", officialGameVisuals.fivePriceTags)}${anchorImageCard("car", current.prize)}`,
+          `<h2>Five Price Tags</h2>
+          <p class="muted">Make four separate True or False decisions. Each correct answer earns one chance to pick the car's actual price.</p>
+          <div class="strategy-board">
+            <span class="label">Car-price picks earned</span>
+            <p><strong>${current.earnedPicks}</strong>${inTagPhase ? ` earned; <strong>${current.picksRemaining}</strong> remaining` : ` after ${current.history.length} of ${current.items.length} products`}.</p>
+          </div>
+          ${current.phase === "trueFalse" ? `
+            <div class="round-progress">Small prize ${current.currentIndex + 1} of ${current.items.length}</div>
+            ${anchorImageCard(item.anchor, item.name)}
+            <div class="shown-price-card">
+              <span class="label">Price shown</span>
+              <strong>${money(item.shown)}</strong>
+            </div>
+            <h3>Is this price true or false?</h3>
+            <div class="truth-grid">
+              <button type="button" class="true" data-action="fivePriceTruth" data-value="true">True</button>
+              <button type="button" class="false" data-action="fivePriceTruth" data-value="false">False</button>
+            </div>
+          ` : ""}
+          ${current.phase === "trueFalseReveal" ? `
+            ${anchorImageCard(reveal.anchor, reveal.name)}
+            <div class="outcome ${reveal.correct ? "win" : "loss"}">
+              <h3>${reveal.correct ? "Price-tag pick earned" : "No pick earned"}</h3>
+              <p>You said ${reveal.answer ? "True" : "False"}. Price shown ${money(reveal.shown)}; actual retail price ${money(reveal.actual)}.</p>
+            </div>
+            <button class="primary continue-button" type="button" data-action="continueFivePriceTags">${current.currentIndex === current.items.length - 1 ? current.earnedPicks ? "Choose Car Price Tags" : "See Game Result" : "Next Small Prize"}</button>
+          ` : ""}
+          ${current.phase === "tags" ? `
+            <div class="round-progress">Choose one price tag</div>
+            <h3>Which is the actual retail price of the ${escapeHtml(current.prize)}?</h3>
+            <div class="price-tag-grid">
+              ${current.tags.map((tag) => `<button type="button" data-action="fivePriceTag" data-value="${tag}" ${current.selectedTags.includes(tag) ? "disabled" : ""}>${current.selectedTags.includes(tag) ? "Not it" : money(tag)}</button>`).join("")}
+            </div>
+          ` : ""}
+          ${current.phase === "tagReveal" ? `
+            <div class="outcome ${current.lastTag.correct ? "win" : "loss"}">
+              <h3>${current.lastTag.correct ? "That is the car price" : "That tag is not the car price"}</h3>
+              <p>You selected ${money(current.lastTag.selected)}.${current.lastTag.correct ? ` Actual retail price ${money(current.actual)}.` : ` ${current.picksRemaining} pick${current.picksRemaining === 1 ? "" : "s"} remain.`}</p>
+            </div>
+            <button class="primary continue-button" type="button" data-action="continueFivePriceTags">${current.lastTag.correct || current.picksRemaining === 0 ? "See Game Result" : "Choose Another Tag"}</button>
+          ` : ""}`
+        )}
+      `;
+      return;
+    }
+
     if (current.plinko) {
       const item = current.items[current.currentIndex];
       const priced = Object.keys(current.answers).length;
@@ -3620,6 +3765,9 @@
     if (action === "anyNumberDigit") submitAnyNumberDigit(target.dataset.value);
     if (action === "cliffPriceInput") submitCliffHangersPrice(document.getElementById("cliffPriceInput").value);
     if (action === "continueCliff") continueCliffHangers();
+    if (action === "fivePriceTruth") submitFivePriceTagsTrueFalse(target.dataset.value);
+    if (action === "continueFivePriceTags") continueFivePriceTags();
+    if (action === "fivePriceTag") selectFivePriceTag(target.dataset.value);
     if (action === "plinkoPrice") submitPlinkoChoice(Number(target.dataset.index), target.dataset.value);
     if (action === "continuePlinko") continuePlinko();
     if (action === "plinkoDrop") dropPlinkoChip(target.dataset.value);
