@@ -282,6 +282,25 @@ h3 {
   margin: 10px 0;
 }
 
+.showcase-result-grid.user-winner {
+  padding: 8px;
+  border: 4px solid var(--green);
+  border-radius: 8px;
+  background: #edf7f1;
+  box-shadow: 0 0 0 3px rgba(33, 122, 72, 0.12);
+}
+
+.showcase-result-grid.user-winner.double-winner {
+  border-width: 5px;
+  box-shadow: 0 0 0 3px rgba(244, 197, 66, 0.55), 0 8px 20px rgba(33, 122, 72, 0.18);
+}
+
+.showcase-result-grid.user-winner .showcase-result-card {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
 .showcase-result-card {
   padding: 12px;
   border: 2px solid #ddd5c7;
@@ -300,11 +319,10 @@ h3 {
   margin: 0;
 }
 
-.showcase-result-card.winner,
-.showcase-result-card.also-won {
-  border: 4px solid var(--green);
-  background: #edf7f1;
-  box-shadow: 0 0 0 3px rgba(33, 122, 72, 0.12);
+.showcase-result-card.opponent-winner {
+  border: 4px solid var(--bad);
+  background: #fff1f1;
+  box-shadow: 0 0 0 3px rgba(166, 50, 50, 0.14);
 }
 
 .showcase-result-card.tied {
@@ -327,6 +345,10 @@ h3 {
 .showcase-tie-badge {
   background: var(--gold);
   color: var(--ink);
+}
+
+.showcase-winner-badge.opponent {
+  background: var(--bad);
 }
 
 .showcase-result-metrics {
@@ -1429,6 +1451,46 @@ input[type="text"] {
 .outcome.win {
   border-color: var(--green);
   background: #eff8f1;
+}
+
+.showcase-celebration {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+
+.showcase-celebration.single-showcase {
+  border: 2px solid var(--green);
+}
+
+.showcase-celebration.double-showcase {
+  border: 4px solid var(--green);
+  background: #fff4bd;
+  box-shadow: 0 0 0 3px rgba(244, 197, 66, 0.5), 0 8px 22px rgba(33, 122, 72, 0.18);
+}
+
+.celebration-icons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 5px;
+  color: var(--green);
+  line-height: 1;
+}
+
+.celebration-icons.single {
+  font-size: 1rem;
+}
+
+.celebration-icons.double {
+  gap: 12px;
+  color: var(--accent);
+  font-size: 1.45rem;
+}
+
+.celebration-icons.double span:nth-child(3) {
+  font-size: 2rem;
 }
 
 .outcome.loss {

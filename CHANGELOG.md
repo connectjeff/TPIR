@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Rework Showcase winner visuals with one green enclosure for user wins, a red opponent-winner outline, and distinct single- and double-win celebrations.
 - Award both prize packages when the winning Showcase bid is within $250 without going over, and clearly identify double-showcase wins in the result view.
 - Rename the mobile web app to **Showcase Ready** across the interface, browser title, and project documentation.
 - Display busted Big Wheel opponents as "Busted" instead of the internal zero sentinel and show all completed spinner results.

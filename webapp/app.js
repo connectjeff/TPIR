@@ -3743,15 +3743,16 @@
   }
 
   function showcaseResultCard(label, prizes, result, status) {
-    const winner = status === "winner";
+    const winner = status === "winner-user" || status === "winner-opponent";
+    const opponentWinner = status === "winner-opponent";
     const tied = status === "tie";
     const alsoWon = status === "also-won-user" || status === "also-won-opponent";
     const alsoWonLabel = status === "also-won-user" ? "You win this too" : "Opponent wins this too";
     return `
-      <section class="showcase-result-card ${winner ? "winner" : ""} ${tied ? "tied" : ""} ${alsoWon ? "also-won" : ""}">
+      <section class="showcase-result-card ${winner ? "winner" : ""} ${opponentWinner ? "opponent-winner" : ""} ${tied ? "tied" : ""} ${alsoWon ? "also-won" : ""}">
         <header>
           <h2>${escapeHtml(label)}</h2>
-          ${winner ? `<span class="showcase-winner-badge">Winner</span>` : alsoWon ? `<span class="showcase-winner-badge">${alsoWonLabel}</span>` : tied ? `<span class="showcase-tie-badge">Tie</span>` : ""}
+          ${winner ? `<span class="showcase-winner-badge ${opponentWinner ? "opponent" : ""}">Winner</span>` : alsoWon ? `<span class="showcase-winner-badge ${status === "also-won-opponent" ? "opponent" : ""}">${alsoWonLabel}</span>` : tied ? `<span class="showcase-tie-badge">Tie</span>` : ""}
         </header>
         <ul class="prompt-list">
           ${prizes.map((prize) => `<li>${escapeHtml(prize)}</li>`).join("")}
@@ -3785,9 +3786,9 @@
       <div class="stage-meta"><span class="pill">Showcase result</span></div>
       ${anchorImageCard("showcase", current.prizes.join("; "))}
       ${structuredResult ? `
-        <div class="showcase-result-grid">
-          ${showcaseResultCard("Your showcase", current.prizes, current.userResult, current.doubleShowcaseWinner === "opponent" ? "also-won-opponent" : current.winner === "user" ? "winner" : current.winner === "tie" ? "tie" : "")}
-          ${showcaseResultCard("Opponent showcase", current.opponentPrizes, current.opponentResult, current.doubleShowcaseWinner === "user" ? "also-won-user" : current.winner === "opponent" ? "winner" : current.winner === "tie" ? "tie" : "")}
+        <div class="showcase-result-grid ${current.winner === "user" ? "user-winner" : ""} ${current.doubleShowcaseWinner === "user" ? "double-winner" : ""}">
+          ${showcaseResultCard("Your showcase", current.prizes, current.userResult, current.doubleShowcaseWinner === "opponent" ? "also-won-opponent" : current.winner === "user" ? "winner-user" : current.winner === "tie" ? "tie" : "")}
+          ${showcaseResultCard("Opponent showcase", current.opponentPrizes, current.opponentResult, current.doubleShowcaseWinner === "user" ? "also-won-user" : current.winner === "opponent" ? "winner-opponent" : current.winner === "tie" ? "tie" : "")}
         </div>
       ` : current.opponentPrizes ? `
         <div class="showcase-compare compact">
@@ -3795,7 +3796,8 @@
           <section class="showcase-side opponent"><h2>Opponent showcase</h2><ul class="prompt-list">${current.opponentPrizes.map((prize) => `<li>${escapeHtml(prize)}</li>`).join("")}</ul></section>
         </div>
       ` : ""}
-      <div class="outcome ${current.won ? "win" : "loss"}">
+      <div class="outcome ${current.won ? "win showcase-celebration" : "loss"} ${current.doubleShowcaseWinner === "user" ? "double-showcase" : current.winner === "user" ? "single-showcase" : ""}">
+        ${current.doubleShowcaseWinner === "user" ? `<div class="celebration-icons double" aria-hidden="true"><span>★</span><span>✦</span><span>🏆</span><span>✦</span><span>★</span></div>` : current.winner === "user" ? `<div class="celebration-icons single" aria-hidden="true"><span>★</span><span>★</span></div>` : ""}
         <h2>${outcomeTitle}</h2>
         ${structuredResult ? "" : `<p>${escapeHtml(current.detail)}</p>`}
         ${current.doubleShowcaseWinner === "user" ? `<p>You won both prize packages, worth <strong>${money(current.showcaseAward)}</strong>.</p>` : ""}
