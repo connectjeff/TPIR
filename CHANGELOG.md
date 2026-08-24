@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Display busted Big Wheel opponents as "Busted" instead of the internal zero sentinel and show all completed spinner results.
+- Show both Showcase bids, actual retail prices, bid differences, overbids, and a clearly boxed winner on the result screen.
+
 ## 0.1.0 - 2026-08-23
 
 Initial public release of the TPIR practice project.

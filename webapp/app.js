@@ -855,6 +855,20 @@
     return value === 100 ? "$1.00" : `${value} cents`;
   }
 
+  function formatWheelScore(value) {
+    return value === 0 || value > 100 ? "Busted" : formatCents(value);
+  }
+
+  function earlierWheelSummary(scores) {
+    if (!scores.length) return "none";
+    const live = scores.filter((score) => score > 0).map(formatCents);
+    const busted = scores.length - live.length;
+    const parts = [];
+    if (live.length) parts.push(live.join(", "));
+    if (busted) parts.push(`${busted} busted`);
+    return parts.join("; ");
+  }
+
   function gateClass(status) {
     if (status === "passed") return "passed";
     if (status === "failed") return "failed";
@@ -2412,15 +2426,18 @@
     const won = current.userTotal > bestOpponent || resolveSpinOff(current.userTotal, bestOpponent);
 
     if (won) {
+      const opponentResult = bestOpponent === 0
+        ? "Both opponents busted."
+        : `Opponent best was ${formatCents(bestOpponent)}.`;
       if (!game.practice) game.score += 10;
       passGate("wheel");
       if (!game.practice) game.gates.showcase = "active";
       game.events.push({
         title: "Big Wheel",
-        detail: `Advanced with ${formatCents(current.userTotal)}. Opponent best was ${formatCents(bestOpponent)}.`,
+        detail: `Advanced with ${formatCents(current.userTotal)}. ${opponentResult}`,
         result: "passed"
       });
-      showWheelResult(true, `You advanced with ${formatCents(current.userTotal)}. Opponent best was ${formatCents(bestOpponent)}.`, current);
+      showWheelResult(true, `You advanced with ${formatCents(current.userTotal)}. ${opponentResult}`, current);
       render();
       return;
     }
@@ -2497,9 +2514,18 @@
     const opponentPrizes = current.opponentPrizes || ["opponent showcase details not stored"];
     const userOver = bid > current.actual;
     const opponentOver = current.opponentBid > current.opponentActual;
-    const userDiff = userOver ? Infinity : current.actual - bid;
-    const opponentDiff = opponentOver ? Infinity : current.opponentActual - current.opponentBid;
-    const won = userDiff < opponentDiff;
+    const userDifference = Math.abs(current.actual - bid);
+    const opponentDifference = Math.abs(current.opponentActual - current.opponentBid);
+    let winner = "none";
+    if (!userOver && opponentOver) winner = "user";
+    if (userOver && !opponentOver) winner = "opponent";
+    if (!userOver && !opponentOver && userDifference < opponentDifference) winner = "user";
+    if (!userOver && !opponentOver && opponentDifference < userDifference) winner = "opponent";
+    if (!userOver && !opponentOver && userDifference === opponentDifference) winner = "tie";
+    const won = winner === "user";
+    const userResult = { bid, actual: current.actual, difference: userDifference, over: userOver };
+    const opponentResult = { bid: current.opponentBid, actual: current.opponentActual, difference: opponentDifference, over: opponentOver };
+    const detail = showcaseResultSummary(winner, userResult, opponentResult);
 
     if (won) {
       if (!game.practice) {
@@ -2515,17 +2541,34 @@
 
     game.events.push({
       title: "Final Showcase",
-      detail: `${won ? "Won" : "Lost"} with bid ${money(bid)}. Your actual retail price ${money(current.actual)}. Opponent bid ${money(current.opponentBid)} on ${opponentPrizes.join("; ")}. Opponent actual retail price ${money(current.opponentActual)}.`,
+      detail,
       result: won ? "passed" : "failed"
     });
     game.current = {
       type: "showcaseResult",
       won,
-      detail: `${won ? "Won" : "Lost"} with bid ${money(bid)}. Your actual retail price ${money(current.actual)}. Opponent bid ${money(current.opponentBid)} on ${opponentPrizes.join("; ")}. Opponent actual retail price ${money(current.opponentActual)}.`,
+      winner,
+      detail,
+      userResult,
+      opponentResult,
       prizes: current.prizes,
       opponentPrizes
     };
     render();
+  }
+
+  function showcaseResultSummary(winner, userResult, opponentResult) {
+    const outcome = winner === "user"
+      ? "You won the Showcase."
+      : winner === "opponent"
+        ? "The opponent won the Showcase."
+        : winner === "tie"
+          ? "The Showcase ended in a tie."
+          : "Both contestants overbid.";
+    return `${outcome} Your bid ${money(userResult.bid)}; actual retail price ${money(userResult.actual)}; ` +
+      `with a difference of ${money(userResult.difference)}${userResult.over ? " over" : ""}. ` +
+      `Opponent bid ${money(opponentResult.bid)}; actual retail price ${money(opponentResult.actual)}; ` +
+      `with a difference of ${money(opponentResult.difference)}${opponentResult.over ? " over" : ""}.`;
   }
 
   function render() {
@@ -2656,16 +2699,22 @@
 
   function wheelPracticeVisualCard(current) {
     const spinnerRows = [0, 1, 2].map((index) => {
-      const score = index < current.earlier.length ? current.earlier[index] : index === current.order - 1 ? current.userTotal : null;
+      const score = index < current.order - 1
+        ? current.earlier[index]
+        : index === current.order - 1
+          ? current.userTotal
+          : current.laterTotals && current.laterTotals[index - current.order] !== undefined
+            ? current.laterTotals[index - current.order]
+            : null;
       const isUser = index === current.order - 1;
-      const over = score !== null && score > 100;
-      const label = score === null ? "Waiting" : over ? "Over" : formatCents(score);
-      const className = over ? "over" : isUser ? "user" : score === null ? "waiting" : "set";
+      const busted = score !== null && (score === 0 || score > 100);
+      const label = score === null ? "Waiting" : formatWheelScore(score);
+      const className = busted ? "over" : isUser ? "user" : score === null ? "waiting" : "set";
       return `
         <div class="wheel-spinner ${className}">
           <span>Spinner ${index + 1}${isUser ? " (you)" : ""}</span>
           <strong>${label}</strong>
-          <div class="wheel-meter"><i style="width: ${score === null ? 0 : Math.min(score, 100)}%"></i></div>
+          <div class="wheel-meter"><i style="width: ${score === null ? 0 : busted ? 100 : Math.min(score, 100)}%"></i></div>
         </div>
       `;
     }).join("");
@@ -3612,7 +3661,7 @@
       <div class="stage-meta"><span class="pill">Big Wheel</span><span class="pill">${ordinal(current.order)} spinner</span></div>
       ${wheelPracticeVisualCard(current)}
       <h2>Your first spin: ${formatCents(current.firstSpin)}</h2>
-      <p>Earlier live scores: ${current.earlier.length ? current.earlier.map(formatCents).join(", ") : "none"}.</p>
+      <p>Earlier spinner results: ${earlierWheelSummary(current.earlier)}.</p>
       <p>Later contestants remaining: ${current.later}</p>
       ${canChoose ? `
         <p class="outcome">You are not behind an earlier live score. This is a real choice.</p>
@@ -3681,30 +3730,56 @@
     `;
   }
 
+  function showcaseResultCard(label, prizes, result, status) {
+    const winner = status === "winner";
+    const tied = status === "tie";
+    return `
+      <section class="showcase-result-card ${winner ? "winner" : ""} ${tied ? "tied" : ""}">
+        <header>
+          <h2>${escapeHtml(label)}</h2>
+          ${winner ? `<span class="showcase-winner-badge">Winner</span>` : tied ? `<span class="showcase-tie-badge">Tie</span>` : ""}
+        </header>
+        <ul class="prompt-list">
+          ${prizes.map((prize) => `<li>${escapeHtml(prize)}</li>`).join("")}
+        </ul>
+        <div class="showcase-result-metrics">
+          <div><span class="label">Bid</span><strong>${money(result.bid)}</strong></div>
+          <div><span class="label">Actual retail price</span><strong>${money(result.actual)}</strong></div>
+        </div>
+        <p class="showcase-difference ${result.over ? "over" : ""}">With a difference of <strong>${money(result.difference)}</strong>${result.over ? " over. This bid is out." : "."}</p>
+      </section>
+    `;
+  }
+
   function renderShowcaseResult(current) {
     const isPractice = game && game.practice;
+    const structuredResult = current.userResult && current.opponentResult;
+    const outcomeTitle = current.winner === "user"
+      ? "Congratulations, showcase winner"
+      : current.winner === "opponent"
+        ? "Opponent won the Showcase"
+        : current.winner === "tie"
+          ? "Showcase tie"
+          : current.winner === "none"
+            ? "Both contestants overbid"
+            : current.won ? "Congratulations, showcase winner" : "Showcase loss";
     els.play.innerHTML = `
       <div class="stage-meta"><span class="pill">Showcase result</span></div>
       ${anchorImageCard("showcase", current.prizes.join("; "))}
-      ${current.opponentPrizes ? `
+      ${structuredResult ? `
+        <div class="showcase-result-grid">
+          ${showcaseResultCard("Your showcase", current.prizes, current.userResult, current.winner === "user" ? "winner" : current.winner === "tie" ? "tie" : "")}
+          ${showcaseResultCard("Opponent showcase", current.opponentPrizes, current.opponentResult, current.winner === "opponent" ? "winner" : current.winner === "tie" ? "tie" : "")}
+        </div>
+      ` : current.opponentPrizes ? `
         <div class="showcase-compare compact">
-          <section class="showcase-side you">
-            <h2>Your showcase</h2>
-            <ul class="prompt-list">
-              ${current.prizes.map((prize) => `<li>${prize}</li>`).join("")}
-            </ul>
-          </section>
-          <section class="showcase-side opponent">
-            <h2>Opponent showcase</h2>
-            <ul class="prompt-list">
-              ${current.opponentPrizes.map((prize) => `<li>${prize}</li>`).join("")}
-            </ul>
-          </section>
+          <section class="showcase-side you"><h2>Your showcase</h2><ul class="prompt-list">${current.prizes.map((prize) => `<li>${escapeHtml(prize)}</li>`).join("")}</ul></section>
+          <section class="showcase-side opponent"><h2>Opponent showcase</h2><ul class="prompt-list">${current.opponentPrizes.map((prize) => `<li>${escapeHtml(prize)}</li>`).join("")}</ul></section>
         </div>
       ` : ""}
       <div class="outcome ${current.won ? "win" : "loss"}">
-        <h2>${current.won ? "Congratulations, showcase winner" : "Showcase loss"}</h2>
-        <p>${escapeHtml(current.detail)}</p>
+        <h2>${outcomeTitle}</h2>
+        ${structuredResult ? "" : `<p>${escapeHtml(current.detail)}</p>`}
         ${current.won ? `<p class="compact-note">Drew's reminder: "Help control the pet population. Have your pets spayed or neutered."</p>` : ""}
       </div>
       <button class="primary continue-button" type="button" data-action="${isPractice ? "repeatShowcase" : "finishShowcaseResult"}">${isPractice ? "Practice Again" : "Save Result"}</button>
