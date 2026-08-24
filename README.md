@@ -1,6 +1,6 @@
 # TPIR Prep Assistant
 
-Two practice surfaces for preparing for *The Price Is Right*: an interactive Codex skill for conversational coaching and a mobile-friendly web app for running the simulator pipeline in a browser.
+Two practice surfaces for preparing for *The Price Is Right*: an interactive Codex skill for conversational coaching and **Showcase Ready**, a mobile-friendly web app for running the simulator pipeline in a browser.
 
 Current release: `0.1.0`. See [CHANGELOG.md](CHANGELOG.md) for release notes.
 
@@ -18,7 +18,7 @@ This repository is not affiliated with, endorsed by, sponsored by, or approved b
 - Adjusts preparation for themed tapings such as Christmas or holiday episodes.
 - Cites official sources, producer comments, contestant reports, and research where appropriate.
 
-### Mobile Web App
+### Showcase Ready Web App
 
 - Runs a full practice pipeline from Contestants Row through the final Showcase.
 - Tracks only full-pipeline games in browser storage, with game history and min, max, and average winnings.
@@ -70,9 +70,9 @@ Quiz me on Contestants Row and Showcase bidding. Give me one scenario at a time.
 Help me write a 20-second selection interview answer. I am going with four coworkers and my favorite game is Plinko.
 ```
 
-## Web App
+## Showcase Ready Web App
 
-The mobile web app lives in `webapp/`. It preserves the simulation flow from Contestants Row through the final Showcase, tracks full-pipeline sessions in browser storage, shows gate-by-gate progress, keeps completed game history, and reports min, max, and average winnings. The header also includes standalone practice launches for Contestants Row, Big Wheel, Showcase, and each pricing-game simulator; standalone practice does not aggregate into history or reports.
+Showcase Ready lives in `webapp/`. It preserves the simulation flow from Contestants Row through the final Showcase, tracks full-pipeline sessions in browser storage, shows gate-by-gate progress, keeps completed game history, and reports min, max, and average winnings. The header also includes standalone practice launches for Contestants Row, Big Wheel, Showcase, and each pricing-game simulator; standalone practice does not aggregate into history or reports.
 
 Open `webapp/index.html` directly, or serve it locally from the repo root:
 

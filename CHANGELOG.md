@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Rename the mobile web app to **Showcase Ready** across the interface, browser title, and project documentation.
 - Display busted Big Wheel opponents as "Busted" instead of the internal zero sentinel and show all completed spinner results.
 - Show both Showcase bids, actual retail prices, bid differences, overbids, and a clearly boxed winner on the result screen.
 

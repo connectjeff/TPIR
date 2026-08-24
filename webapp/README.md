@@ -1,6 +1,6 @@
-# TPIR Practice Pipeline Web App
+# Showcase Ready Web App
 
-This is a static mobile-friendly browser version of the TPIR practice simulator. It is separate from the Codex skill in `tpir-prep-assistant/`, but both use the same repository-level preparation goals: educational practice, hidden prices until answers resolve, and clear rights boundaries.
+Showcase Ready is a static mobile-friendly browser version of the TPIR practice simulator. It is separate from the Codex skill in `tpir-prep-assistant/`, but both use the same repository-level preparation goals: educational practice, hidden prices until answers resolve, and clear rights boundaries.
 
 ## Run
 
