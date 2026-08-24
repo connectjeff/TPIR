@@ -3,6 +3,7 @@
 
   const STORAGE_KEY = "tpirPracticeSession.v1";
   const MAX_ROW_ATTEMPTS = 6;
+  const DOUBLE_SHOWCASE_THRESHOLD = 250;
 
   const gates = [
     { key: "row", label: "Row", full: "Contestants Row" },
@@ -2525,13 +2526,18 @@
     const won = winner === "user";
     const userResult = { bid, actual: current.actual, difference: userDifference, over: userOver };
     const opponentResult = { bid: current.opponentBid, actual: current.opponentActual, difference: opponentDifference, over: opponentOver };
-    const detail = showcaseResultSummary(winner, userResult, opponentResult);
+    const winningResult = winner === "user" ? userResult : winner === "opponent" ? opponentResult : null;
+    const doubleShowcaseWinner = winningResult && winningResult.difference <= DOUBLE_SHOWCASE_THRESHOLD ? winner : null;
+    const showcaseAward = won ? current.actual + (doubleShowcaseWinner === "user" ? current.opponentActual : 0) : 0;
+    const detail = showcaseResultSummary(winner, userResult, opponentResult, doubleShowcaseWinner);
 
     if (won) {
       if (!game.practice) {
         game.score += 15;
-        game.accumulatedValue += current.actual;
-        game.wonPrizes.push(`Showcase (${money(current.actual)})`);
+        game.accumulatedValue += showcaseAward;
+        game.wonPrizes.push(doubleShowcaseWinner === "user"
+          ? `Both Showcases (${money(showcaseAward)})`
+          : `Showcase (${money(showcaseAward)})`);
       }
       passGate("showcase");
     } else {
@@ -2548,6 +2554,8 @@
       type: "showcaseResult",
       won,
       winner,
+      doubleShowcaseWinner,
+      showcaseAward,
       detail,
       userResult,
       opponentResult,
@@ -2557,14 +2565,18 @@
     render();
   }
 
-  function showcaseResultSummary(winner, userResult, opponentResult) {
-    const outcome = winner === "user"
-      ? "You won the Showcase."
-      : winner === "opponent"
-        ? "The opponent won the Showcase."
-        : winner === "tie"
-          ? "The Showcase ended in a tie."
-          : "Both contestants overbid.";
+  function showcaseResultSummary(winner, userResult, opponentResult, doubleShowcaseWinner) {
+    const outcome = doubleShowcaseWinner === "user"
+      ? "You won both showcases as the winning bidder within $250 of the actual retail price."
+      : doubleShowcaseWinner === "opponent"
+        ? "The opponent won both showcases as the winning bidder within $250 of the actual retail price."
+        : winner === "user"
+          ? "You won the Showcase."
+          : winner === "opponent"
+            ? "The opponent won the Showcase."
+            : winner === "tie"
+              ? "The Showcase ended in a tie."
+              : "Both contestants overbid.";
     return `${outcome} Your bid ${money(userResult.bid)}; actual retail price ${money(userResult.actual)}; ` +
       `with a difference of ${money(userResult.difference)}${userResult.over ? " over" : ""}. ` +
       `Opponent bid ${money(opponentResult.bid)}; actual retail price ${money(opponentResult.actual)}; ` +
@@ -3733,11 +3745,13 @@
   function showcaseResultCard(label, prizes, result, status) {
     const winner = status === "winner";
     const tied = status === "tie";
+    const alsoWon = status === "also-won-user" || status === "also-won-opponent";
+    const alsoWonLabel = status === "also-won-user" ? "You win this too" : "Opponent wins this too";
     return `
-      <section class="showcase-result-card ${winner ? "winner" : ""} ${tied ? "tied" : ""}">
+      <section class="showcase-result-card ${winner ? "winner" : ""} ${tied ? "tied" : ""} ${alsoWon ? "also-won" : ""}">
         <header>
           <h2>${escapeHtml(label)}</h2>
-          ${winner ? `<span class="showcase-winner-badge">Winner</span>` : tied ? `<span class="showcase-tie-badge">Tie</span>` : ""}
+          ${winner ? `<span class="showcase-winner-badge">Winner</span>` : alsoWon ? `<span class="showcase-winner-badge">${alsoWonLabel}</span>` : tied ? `<span class="showcase-tie-badge">Tie</span>` : ""}
         </header>
         <ul class="prompt-list">
           ${prizes.map((prize) => `<li>${escapeHtml(prize)}</li>`).join("")}
@@ -3754,22 +3768,26 @@
   function renderShowcaseResult(current) {
     const isPractice = game && game.practice;
     const structuredResult = current.userResult && current.opponentResult;
-    const outcomeTitle = current.winner === "user"
-      ? "Congratulations, showcase winner"
-      : current.winner === "opponent"
-        ? "Opponent won the Showcase"
-        : current.winner === "tie"
-          ? "Showcase tie"
-          : current.winner === "none"
-            ? "Both contestants overbid"
-            : current.won ? "Congratulations, showcase winner" : "Showcase loss";
+    const outcomeTitle = current.doubleShowcaseWinner === "user"
+      ? "Double Showcase Winner!"
+      : current.doubleShowcaseWinner === "opponent"
+        ? "Opponent won both showcases"
+        : current.winner === "user"
+          ? "Congratulations, showcase winner"
+          : current.winner === "opponent"
+            ? "Opponent won the Showcase"
+            : current.winner === "tie"
+              ? "Showcase tie"
+              : current.winner === "none"
+                ? "Both contestants overbid"
+                : current.won ? "Congratulations, showcase winner" : "Showcase loss";
     els.play.innerHTML = `
       <div class="stage-meta"><span class="pill">Showcase result</span></div>
       ${anchorImageCard("showcase", current.prizes.join("; "))}
       ${structuredResult ? `
         <div class="showcase-result-grid">
-          ${showcaseResultCard("Your showcase", current.prizes, current.userResult, current.winner === "user" ? "winner" : current.winner === "tie" ? "tie" : "")}
-          ${showcaseResultCard("Opponent showcase", current.opponentPrizes, current.opponentResult, current.winner === "opponent" ? "winner" : current.winner === "tie" ? "tie" : "")}
+          ${showcaseResultCard("Your showcase", current.prizes, current.userResult, current.doubleShowcaseWinner === "opponent" ? "also-won-opponent" : current.winner === "user" ? "winner" : current.winner === "tie" ? "tie" : "")}
+          ${showcaseResultCard("Opponent showcase", current.opponentPrizes, current.opponentResult, current.doubleShowcaseWinner === "user" ? "also-won-user" : current.winner === "opponent" ? "winner" : current.winner === "tie" ? "tie" : "")}
         </div>
       ` : current.opponentPrizes ? `
         <div class="showcase-compare compact">
@@ -3780,6 +3798,7 @@
       <div class="outcome ${current.won ? "win" : "loss"}">
         <h2>${outcomeTitle}</h2>
         ${structuredResult ? "" : `<p>${escapeHtml(current.detail)}</p>`}
+        ${current.doubleShowcaseWinner === "user" ? `<p>You won both prize packages, worth <strong>${money(current.showcaseAward)}</strong>.</p>` : ""}
         ${current.won ? `<p class="compact-note">Drew's reminder: "Help control the pet population. Have your pets spayed or neutered."</p>` : ""}
       </div>
       <button class="primary continue-button" type="button" data-action="${isPractice ? "repeatShowcase" : "finishShowcaseResult"}">${isPractice ? "Practice Again" : "Save Result"}</button>

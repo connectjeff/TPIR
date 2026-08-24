@@ -300,7 +300,8 @@ h3 {
   margin: 0;
 }
 
-.showcase-result-card.winner {
+.showcase-result-card.winner,
+.showcase-result-card.also-won {
   border: 4px solid var(--green);
   background: #edf7f1;
   box-shadow: 0 0 0 3px rgba(33, 122, 72, 0.12);
