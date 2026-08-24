@@ -1136,7 +1136,11 @@
 
   function startPrizeRound(selectedGameType) {
     const gameType = selectedGameType || choice(pricingPracticeGames.map((practiceGame) => practiceGame.key));
-    if (gameType === "flipFlop") {
+    if (gameType === "anyNumber") {
+      game.current = buildAnyNumberRound();
+    } else if (gameType === "cliffHangers") {
+      game.current = buildCliffHangersRound();
+    } else if (gameType === "flipFlop") {
       const options = [
         { shown: "6947", actual: 6974, prize: "trip for two to Charleston, 5 nights, airfare included" },
         { shown: "8796", actual: 8976, prize: "designer bedroom set with mattress and linens" },
@@ -1197,12 +1201,52 @@
       prize: "Plinko cash",
       freeChips: 1,
       answers: {},
-      drops: [10000, 1000, 500, 0, 100],
+      currentIndex: 0,
+      phase: "pricing",
+      chips: 1,
+      chipsRemaining: 0,
+      winnings: 0,
+      dropHistory: [],
       items: [
         { name: "compact garment steamer", choices: [29, 92], actual: 29 },
         { name: "digital kitchen scale", choices: [48, 84], actual: 48 },
         { name: "wireless charging stand", choices: [65, 56], actual: 65 },
         { name: "mini waffle maker set", choices: [37, 73], actual: 37 }
+      ]
+    };
+  }
+
+  function buildAnyNumberRound() {
+    return {
+      type: "prize",
+      gameType: "anyNumber",
+      anyNumber: true,
+      title: "Any Number",
+      prize: "2026 compact sedan, kayak package, and piggy bank",
+      car: { label: "2026 compact sedan", digits: "24531", revealed: [true, false, false, false, false], value: 24531 },
+      smallPrize: { label: "kayak package", digits: "680", revealed: [false, false, false], value: 680 },
+      piggyBank: { label: "Piggy bank", digits: "792", revealed: [false, false, false], value: 7.92 },
+      called: [],
+      lastReveal: "The first digit of the car is 2. Call one unused digit."
+    };
+  }
+
+  function buildCliffHangersRound() {
+    return {
+      type: "prize",
+      gameType: "cliffHangers",
+      cliffHangers: true,
+      title: "Cliff Hangers",
+      prize: "infrared home sauna package with towel warmer, robes, and aromatherapy set",
+      prizeValue: 4298,
+      currentIndex: 0,
+      steps: 0,
+      phase: "pricing",
+      history: [],
+      items: [
+        { name: "compact personal blender with travel cup", actual: 32 },
+        { name: "ionic hair dryer with diffuser and concentrator", actual: 45 },
+        { name: "instant-read digital kitchen thermometer", actual: 28 }
       ]
     };
   }
@@ -1505,13 +1549,6 @@
         visible: "Items: cereal, olive oil, paper towels, salsa, ice cream. Your total estimate choices are below.",
         choices: ["$26.75 total", "$14.20 total", "$43.90 total"],
         actual: 2740
-      },
-      cliffHangers: {
-        prize: "home sauna package",
-        prompt: "Price three small prizes accurately enough to keep the climber from going over the top.",
-        visible: "Small prizes: mini blender, hair dryer, and digital thermometer. Choose the strongest set of bids.",
-        choices: ["$32, $45, $28", "$10, $90, $75", "$60, $15, $110"],
-        actual: 105
       },
       clockGame: {
         prize: "two small prizes",
@@ -1844,12 +1881,6 @@
       }
     };
     const samples = {
-      anyNumber: {
-        prize: "2026 compact sedan, kayak package, and piggy bank",
-        visible: "The car starts with 2. Available digits: 0, 1, 3, 4, 5, 6, 7, 8, 9. Choose your next digit.",
-        choices: ["Choose 4 for the car price", "Choose 9 for the piggy bank", "Choose 0 because it has not appeared"],
-        actual: 24531
-      },
       balanceGame: {
         prize: "trip for two to Santa Fe, 5 nights, airfare included",
         visible: "Base bag is $3,000. Money bags shown: $547, $1,000, $2,000. Choose bags to match the trip price.",
@@ -2023,6 +2054,10 @@
       detail = `${won ? "Won" : "Lost"} One Away. Actual car price ${money(current.actual)}.`;
     }
 
+    completePrizeRound(won, detail, prizeName, prizeValue);
+  }
+
+  function completePrizeRound(won, detail, prizeName, prizeValue) {
     if (won && !game.practice) {
       game.score += 10;
       game.accumulatedValue += prizeValue;
@@ -2047,48 +2082,142 @@
     render();
   }
 
-  function submitPlinkoChoice(itemIndex, value) {
+  function submitAnyNumberDigit(value) {
     const current = game.current;
-    if (!current || !current.plinko) return;
-    current.answers[itemIndex] = wholeDollar(value);
-    if (Object.keys(current.answers).length < current.items.length) {
+    const digit = String(value);
+    if (!current || !current.anyNumber || current.called.includes(digit)) return;
+
+    const targets = [
+      { key: "car", name: current.car.label, start: 1 },
+      { key: "smallPrize", name: current.smallPrize.label, start: 0 },
+      { key: "piggyBank", name: current.piggyBank.label, start: 0 }
+    ];
+    let placed = null;
+    targets.some((target) => {
+      const board = current[target.key];
+      for (let index = target.start; index < board.digits.length; index += 1) {
+        if (board.digits[index] === digit) {
+          board.revealed[index] = true;
+          placed = target;
+          return true;
+        }
+      }
+      return false;
+    });
+    if (!placed) return;
+
+    current.called.push(digit);
+    current.lastReveal = `${digit} belongs in the ${placed.name}.`;
+    const completed = targets.find((target) => current[target.key].revealed.every(Boolean));
+    if (!completed) {
       render();
       return;
     }
 
-    const correctItems = current.items.filter((item, index) => current.answers[index] === item.actual);
-    const chips = current.freeChips + correctItems.length;
-    const drops = current.drops.slice(0, chips);
-    const winnings = drops.reduce((sum, amount) => sum + amount, 0);
-    const won = winnings > 0;
-    const priceReveal = current.items
-      .map((item) => `${item.name}: ${money(item.actual)}`)
-      .join("; ");
-    const dropReveal = drops.map(money).join(", ");
+    const won = completed.key === "car";
+    const detail = `${won ? "Won" : "Lost"} Any Number. ${completed.name} filled first. ` +
+      `Car actual retail price ${money(current.car.value)}; kayak package actual retail price ${money(current.smallPrize.value)}; ` +
+      `piggy bank actual value $${current.piggyBank.value.toFixed(2)}.`;
+    completePrizeRound(won, detail, won ? current.car.label : completed.name, won ? current.car.value : 0);
+  }
 
-    if (won && !game.practice) {
-      game.score += 10;
-      game.accumulatedValue += winnings;
-      game.wonPrizes.push(`Plinko cash (${money(winnings)})`);
-      passGate("prize");
-    } else if (won) {
-      passGate("prize");
-    } else {
-      game.gates.prize = "failed";
-    }
-
-    const detail = `${won ? "Won" : "Lost"} Plinko. You earned ${correctItems.length} chips plus the free chip for ${chips} total chip${chips === 1 ? "" : "s"}. Chip drops: ${dropReveal}. Total cash: ${money(winnings)}. Correct small-item prices: ${priceReveal}.`;
-    game.events.push({ title: "Prize round", detail, result: won ? "passed" : "failed" });
-    if (!game.practice) game.gates.wheel = "active";
-    game.current = {
-      type: "prizeResult",
-      won,
-      detail,
-      prizeName: "Plinko cash",
-      prizeValue: winnings,
-      imageDescription: "Plinko cash game with small prize items"
-    };
+  function submitCliffHangersPrice(value) {
+    const current = game.current;
+    if (!current || !current.cliffHangers || current.phase !== "pricing") return;
+    const item = current.items[current.currentIndex];
+    const guess = wholeDollar(value);
+    if (guess < 1) return;
+    const miss = Math.abs(guess - item.actual);
+    current.steps += miss;
+    current.history.push({ name: item.name, guess, actual: item.actual, miss });
+    current.lastReveal = { name: item.name, guess, actual: item.actual, miss };
+    current.phase = "reveal";
     render();
+  }
+
+  function continueCliffHangers() {
+    const current = game.current;
+    if (!current || !current.cliffHangers || current.phase !== "reveal") return;
+    if (current.steps > 25) {
+      const detail = `Lost Cliff Hangers after item ${current.currentIndex + 1}. The latest miss moved the climber to ${current.steps} steps, past the 25-step limit. ` +
+        cliffHangersPriceSummary(current);
+      completePrizeRound(false, detail, current.prize, 0);
+      return;
+    }
+    if (current.currentIndex === current.items.length - 1) {
+      const detail = `Won Cliff Hangers with ${current.steps} total climber steps, within the 25-step limit. ${cliffHangersPriceSummary(current)}`;
+      completePrizeRound(true, detail, current.prize, current.prizeValue);
+      return;
+    }
+    current.currentIndex += 1;
+    current.phase = "pricing";
+    current.lastReveal = null;
+    render();
+  }
+
+  function cliffHangersPriceSummary(current) {
+    return current.history.map((entry) => `${entry.name}: guessed ${money(entry.guess)}, actual retail price ${money(entry.actual)}, ${entry.miss} step${entry.miss === 1 ? "" : "s"}`).join("; ");
+  }
+
+  function submitPlinkoChoice(itemIndex, value) {
+    const current = game.current;
+    if (!current || !current.plinko || current.phase !== "pricing" || itemIndex !== current.currentIndex) return;
+    const item = current.items[itemIndex];
+    const selected = wholeDollar(value);
+    current.answers[itemIndex] = selected;
+    current.lastReveal = { item: item.name, selected, actual: item.actual, correct: selected === item.actual };
+    if (selected === item.actual) current.chips += 1;
+    current.phase = "priceReveal";
+    render();
+  }
+
+  function continuePlinko() {
+    const current = game.current;
+    if (!current || !current.plinko) return;
+    if (current.phase === "priceReveal") {
+      if (current.currentIndex < current.items.length - 1) {
+        current.currentIndex += 1;
+        current.phase = "pricing";
+        current.lastReveal = null;
+      } else {
+        current.chipsRemaining = current.chips;
+        current.phase = "dropping";
+      }
+      render();
+      return;
+    }
+    if (current.phase !== "dropReveal") return;
+    if (current.chipsRemaining > 0) {
+      current.phase = "dropping";
+      render();
+      return;
+    }
+    const won = current.winnings > 0;
+    const priceReveal = current.items.map((item) => `${item.name}: actual retail price ${money(item.actual)}`).join("; ");
+    const dropReveal = current.dropHistory.map((drop, index) => `chip ${index + 1} from slot ${drop.start + 1} landed in ${money(drop.amount)}`).join("; ");
+    const detail = `${won ? "Won" : "Lost"} Plinko. Earned ${current.chips - current.freeChips} chips plus one free chip. ${dropReveal}. Total cash ${money(current.winnings)}. ${priceReveal}.`;
+    completePrizeRound(won, detail, "Plinko cash", current.winnings);
+  }
+
+  function dropPlinkoChip(value) {
+    const current = game.current;
+    if (!current || !current.plinko || current.phase !== "dropping" || current.chipsRemaining < 1) return;
+    const start = Math.max(0, Math.min(8, Number(value)));
+    const landing = plinkoLanding(start);
+    const boardValues = [100, 500, 1000, 0, 10000, 0, 1000, 500, 100];
+    const amount = boardValues[landing];
+    current.dropHistory.push({ start, landing, amount });
+    current.winnings += amount;
+    current.chipsRemaining -= 1;
+    current.lastDrop = { start, landing, amount };
+    current.phase = "dropReveal";
+    render();
+  }
+
+  function plinkoLanding(start) {
+    let position = start * 2;
+    for (let bounce = 0; bounce < 12; bounce += 1) position += Math.random() < 0.5 ? -1 : 1;
+    return Math.max(0, Math.min(8, Math.round(position / 2)));
   }
 
   function countMatchingDigits(a, b) {
@@ -2500,7 +2629,8 @@
     const text = `${kind} ${description}`.toLowerCase();
     if (/robot vacuum|self-empty|auto-empty|mop dock/.test(text)) return "robot vacuum";
     if (/espresso|burr grinder|coffee subscription|knock box/.test(text)) return "espresso";
-    if (/cookware|dutch oven|cast-iron|chef knives|roasting pan/.test(text)) return "cookware";
+    if (/cookware|dutch oven|cast-iron|chef knives|roasting pan|blender|waffle maker|kitchen scale|thermometer/.test(text)) return "cookware";
+    if (/hair dryer|garment steamer|toothbrush|humidifier/.test(text)) return "wellness";
     if (/oled|television|soundbar|subwoofer|streaming device|home theater|projector/.test(text)) return "tv soundbar";
     if (/gaming|console|controller|headset|handheld/.test(text)) return "gaming";
     if (/mirrorless|action camera|creator|gimbal|microphone|tripod|led panel/.test(text)) return "creator camera";
@@ -3022,6 +3152,20 @@
     `;
   }
 
+  function anyNumberPriceRow(board, kind) {
+    const prefix = kind === "car" ? "$" : kind === "small" ? "$" : "$";
+    const slots = board.digits.split("").map((digit, index) => {
+      const divider = kind === "piggy" && index === 1 ? `<span class="decimal">.</span>` : "";
+      return `${divider}<span class="number-slot ${board.revealed[index] ? "revealed" : ""}">${board.revealed[index] ? digit : "?"}</span>`;
+    }).join("");
+    return `
+      <div class="any-number-row ${kind}">
+        <span>${escapeHtml(board.label)}</span>
+        <strong><b>${prefix}</b>${slots}</strong>
+      </div>
+    `;
+  }
+
   function ordinal(value) {
     return ["first", "second", "third", "fourth"][value - 1] || `${value}`;
   }
@@ -3033,37 +3177,108 @@
       return;
     }
 
+    if (current.anyNumber) {
+      els.play.innerHTML = `
+        <div class="stage-meta"><span class="pill">Prize round</span><span class="pill">Any Number</span></div>
+        ${pricingLayout(
+          `${visualCard("prize", officialGameVisuals.anyNumber)}${anchorImageCard("car", current.prize)}`,
+          `<h2>Any Number</h2>
+          <p class="muted">Call one unused digit. It is revealed wherever it belongs. The first complete price wins that prize and ends the game.</p>
+          <div class="any-number-board">
+            ${anyNumberPriceRow(current.car, "car")}
+            ${anyNumberPriceRow(current.smallPrize, "small")}
+            ${anyNumberPriceRow(current.piggyBank, "piggy")}
+          </div>
+          <p class="step-feedback">${escapeHtml(current.lastReveal)}</p>
+          <div class="digit-grid" aria-label="Unused digits">
+            ${Array.from({ length: 10 }, (_, digit) => `<button type="button" data-action="anyNumberDigit" data-value="${digit}" ${current.called.includes(String(digit)) ? "disabled" : ""}>${digit}</button>`).join("")}
+          </div>`
+        )}
+      `;
+      return;
+    }
+
+    if (current.cliffHangers) {
+      const item = current.items[current.currentIndex];
+      const remaining = Math.max(0, 25 - current.steps);
+      const reveal = current.lastReveal;
+      els.play.innerHTML = `
+        <div class="stage-meta"><span class="pill">Prize round</span><span class="pill">Cliff Hangers</span></div>
+        ${pricingLayout(
+          `${visualCard("prize", officialGameVisuals.cliffHangers)}${anchorImageCard("home sauna", current.prize)}`,
+          `<h2>Cliff Hangers</h2>
+          <p class="muted">Price each small prize separately. Every dollar you miss moves the climber one step; going past 25 loses the game.</p>
+          <div class="cliff-meter" aria-label="Climber at ${current.steps} of 25 steps">
+            <div><span>Start</span><strong>${current.steps} / 25 steps</strong><span>Top</span></div>
+            <div class="cliff-track"><i style="width:${Math.min(100, current.steps / 25 * 100)}%"></i></div>
+            <small>${remaining} safe step${remaining === 1 ? "" : "s"} remain</small>
+          </div>
+          <div class="round-progress">Small prize ${current.currentIndex + 1} of ${current.items.length}</div>
+          ${anchorImageCard(detectVisualCategory(item.name, "small prize"), item.name)}
+          ${current.phase === "pricing" ? `
+            <h3>What is its actual retail price?</h3>
+            <div class="form-line">
+              <label>
+                <span class="label">Your whole-dollar bid</span>
+                <input id="cliffPriceInput" type="number" inputmode="numeric" min="1" max="999" step="1" autofocus>
+              </label>
+              <button class="primary" type="button" data-action="cliffPriceInput">Submit Price</button>
+            </div>
+          ` : `
+            <div class="outcome ${current.steps > 25 ? "loss" : reveal.miss === 0 ? "win" : ""}">
+              <h3>${reveal.miss === 0 ? "Exact price" : `${reveal.miss} climber step${reveal.miss === 1 ? "" : "s"}`}</h3>
+              <p>You chose ${money(reveal.guess)}. Actual retail price ${money(reveal.actual)}.</p>
+            </div>
+            <button class="primary continue-button" type="button" data-action="continueCliff">${current.steps > 25 || current.currentIndex === current.items.length - 1 ? "See Game Result" : "Next Small Prize"}</button>
+          `}`
+        )}
+      `;
+      return;
+    }
+
     if (current.plinko) {
-      const earned = current.items.filter((item, index) => current.answers[index] === item.actual).length;
-      const answered = Object.keys(current.answers).length;
+      const item = current.items[current.currentIndex];
+      const priced = Object.keys(current.answers).length;
+      const priceReveal = current.phase === "priceReveal" ? current.lastReveal : null;
+      const dropping = current.phase === "dropping" || current.phase === "dropReveal";
       els.play.innerHTML = `
         <div class="stage-meta"><span class="pill">Prize round</span><span class="pill">Plinko</span></div>
         ${pricingLayout(
-          `${visualCard("prize", officialGameVisuals.plinko)}${anchorImageCard("bundle", "Small items for earning Plinko chips")}`,
+          `${visualCard("prize", officialGameVisuals.plinko)}${anchorImageCard(dropping ? "bundle" : detectVisualCategory(item.name, "small prize"), dropping ? "Plinko board" : item.name)}`,
           `<h2>Plinko</h2>
-          <p class="muted">Choose the correct price for each small item to earn chips. You start with one free chip.</p>
+          <p class="muted">Price four small items one at a time to earn chips, then choose where to drop every chip.</p>
           <div class="strategy-board">
             <span class="label">Chips</span>
-            <p>${current.freeChips + earned} chip${current.freeChips + earned === 1 ? "" : "s"} ready so far. ${answered}/${current.items.length} small items priced.</p>
+            <p>${current.chips} earned. ${priced}/${current.items.length} small items priced.${dropping ? ` ${current.chipsRemaining} chip${current.chipsRemaining === 1 ? "" : "s"} left to drop. Winnings ${money(current.winnings)}.` : ""}</p>
           </div>
-          <div class="plinko-items">
-            ${current.items.map((item, index) => `
-              <article class="plinko-item">
-                <strong>${escapeHtml(item.name)}</strong>
-                <div class="mini-price-grid">
-                  ${item.choices.map((price) => `
-                    <button
-                      type="button"
-                      class="${current.answers[index] === price ? "selected" : ""}"
-                      data-action="plinkoPrice"
-                      data-index="${index}"
-                      data-value="${price}"
-                    >${money(price)}</button>
-                  `).join("")}
-                </div>
-              </article>
-            `).join("")}
-          </div>`
+          ${current.phase === "pricing" ? `
+            <div class="round-progress">Small item ${current.currentIndex + 1} of ${current.items.length}</div>
+            <h3>${escapeHtml(item.name)}</h3>
+            <div class="mini-price-grid">
+              ${item.choices.map((price) => `<button type="button" data-action="plinkoPrice" data-index="${current.currentIndex}" data-value="${price}">${money(price)}</button>`).join("")}
+            </div>
+          ` : ""}
+          ${priceReveal ? `
+            <div class="outcome ${priceReveal.correct ? "win" : "loss"}">
+              <h3>${priceReveal.correct ? "Chip earned" : "No chip"}</h3>
+              <p>You chose ${money(priceReveal.selected)}. Actual retail price ${money(priceReveal.actual)}.</p>
+            </div>
+            <button class="primary continue-button" type="button" data-action="continuePlinko">${current.currentIndex === current.items.length - 1 ? "Go to Plinko Board" : "Next Small Item"}</button>
+          ` : ""}
+          ${current.phase === "dropping" ? `
+            <h3>Choose a drop slot for chip ${current.dropHistory.length + 1}</h3>
+            <div class="plinko-slots">
+              ${Array.from({ length: 9 }, (_, index) => `<button type="button" data-action="plinkoDrop" data-value="${index}">${index + 1}</button>`).join("")}
+            </div>
+            <div class="plinko-values" aria-label="Plinko cash slots">${[100, 500, 1000, 0, 10000, 0, 1000, 500, 100].map((amount) => `<span>${money(amount)}</span>`).join("")}</div>
+          ` : ""}
+          ${current.phase === "dropReveal" ? `
+            <div class="outcome ${current.lastDrop.amount > 0 ? "win" : "loss"}">
+              <h3>Chip landed in ${money(current.lastDrop.amount)}</h3>
+              <p>Dropped from slot ${current.lastDrop.start + 1}; landed in cash slot ${current.lastDrop.landing + 1}. Running total ${money(current.winnings)}.</p>
+            </div>
+            <button class="primary continue-button" type="button" data-action="continuePlinko">${current.chipsRemaining > 0 ? "Drop Next Chip" : "See Game Result"}</button>
+          ` : ""}`
         )}
       `;
       return;
@@ -3402,7 +3617,12 @@
     if (action === "rowBid") submitRowBid();
     if (action === "continueRow") continueAfterRowResult();
     if (action === "prizeChoice") submitPrizeChoice(target.dataset.value);
+    if (action === "anyNumberDigit") submitAnyNumberDigit(target.dataset.value);
+    if (action === "cliffPriceInput") submitCliffHangersPrice(document.getElementById("cliffPriceInput").value);
+    if (action === "continueCliff") continueCliffHangers();
     if (action === "plinkoPrice") submitPlinkoChoice(Number(target.dataset.index), target.dataset.value);
+    if (action === "continuePlinko") continuePlinko();
+    if (action === "plinkoDrop") dropPlinkoChip(target.dataset.value);
     if (action === "oneAway") submitPrizeChoice(document.getElementById("oneAwayInput").value);
     if (action === "continueWheel") startWheel();
     if (action === "finishWheelLoss") finishPendingWheelLoss();
@@ -3421,6 +3641,7 @@
   document.addEventListener("keydown", (event) => {
     if (event.key !== "Enter") return;
     if (document.getElementById("bidInput")) submitRowBid();
+    if (document.getElementById("cliffPriceInput")) submitCliffHangersPrice(document.getElementById("cliffPriceInput").value);
     if (document.getElementById("oneAwayInput")) submitPrizeChoice(document.getElementById("oneAwayInput").value);
     if (document.getElementById("showcaseBid")) submitShowcaseBid();
   });

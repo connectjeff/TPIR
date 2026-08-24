@@ -362,6 +362,149 @@ h3 {
   color: var(--ink);
 }
 
+.round-progress {
+  margin: 10px 0 8px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.step-feedback {
+  margin: 9px 0;
+  padding: 9px 10px;
+  border-left: 4px solid var(--blue);
+  background: #eef6fc;
+  font-weight: 800;
+}
+
+.any-number-board {
+  display: grid;
+  gap: 7px;
+  margin: 10px 0;
+}
+
+.any-number-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px;
+  border: 1px solid #ddd5c7;
+  border-radius: 8px;
+  background: #fffdf8;
+}
+
+.any-number-row > span {
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+
+.any-number-row strong {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.number-slot {
+  display: grid;
+  width: 27px;
+  height: 34px;
+  place-items: center;
+  border: 2px solid #bcb3a4;
+  border-radius: 5px;
+  background: #eee9df;
+  color: #81796d;
+}
+
+.number-slot.revealed {
+  border-color: var(--blue);
+  background: #e9f4fc;
+  color: var(--blue);
+}
+
+.decimal {
+  align-self: end;
+  margin: 0 -2px 3px;
+}
+
+.digit-grid,
+.plinko-slots,
+.plinko-values {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.digit-grid button,
+.plinko-slots button {
+  min-height: 42px;
+  border: 0;
+  border-radius: 7px;
+  background: var(--accent);
+  color: white;
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.digit-grid button:disabled {
+  background: #ded8cd;
+  color: #8a8378;
+}
+
+.cliff-meter {
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ddd5c7;
+  border-radius: 8px;
+  background: #f6f4eb;
+}
+
+.cliff-meter > div:first-child {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.76rem;
+  font-weight: 850;
+}
+
+.cliff-meter small {
+  display: block;
+  margin-top: 5px;
+  color: var(--muted);
+  font-weight: 750;
+}
+
+.cliff-track {
+  height: 14px;
+  margin-top: 7px;
+  overflow: hidden;
+  border-radius: 7px;
+  background: #ddd8ca;
+}
+
+.cliff-track i {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+}
+
+.plinko-slots,
+.plinko-values {
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+}
+
+.plinko-values {
+  margin-top: 5px;
+}
+
+.plinko-values span {
+  overflow: hidden;
+  font-size: 0.58rem;
+  font-weight: 850;
+  text-align: center;
+}
+
 .visual-card {
   margin: 0 0 10px;
   overflow: hidden;
