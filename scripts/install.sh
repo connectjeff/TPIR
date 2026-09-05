@@ -57,7 +57,7 @@ done
 script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 repo_root=$(CDPATH= cd -- "$script_dir/.." && pwd)
 skill_name="tpir-prep-assistant"
-source_dir="$repo_root/$skill_name"
+source_dir="$repo_root/showcase-ready/skills/$skill_name"
 dest_path="$dest_dir/$skill_name"
 
 if [ ! -f "$source_dir/SKILL.md" ]; then

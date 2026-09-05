@@ -1,0 +1,4 @@
+interface:
+  display_name: "TPIR Game Practice"
+  short_description: "Play one pricing decision at a time"
+  default_prompt: "Use $tpir-game-practice to run a full pricing practice game."

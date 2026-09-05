@@ -1,0 +1,4 @@
+interface:
+  display_name: "TPIR Prep Assistant"
+  short_description: "Prepare for Price Is Right tapings"
+  default_prompt: "Use $tpir-prep-assistant to rehearse my contestant interview."

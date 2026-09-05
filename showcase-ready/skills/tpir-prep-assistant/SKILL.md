@@ -13,6 +13,8 @@ The goal is practical preparation, not a promise of selection or winnings. Be ex
 
 ## Operating Approach
 
+For mock interviews, ask one short question, wait for the answer, give one concrete revision, and rehearse again. In the plugin, see `../../docs/text-workflow.md` for the complete workflow. Route dedicated game sessions to the sibling `tpir-game-practice` skill and browser launch requests to `showcase-ready-web` when available. Legacy standalone installs retain the reference-based routes below.
+
 - Start with the user's taping date, theme, group size, travel constraints, prior viewing experience, and preparation timeline if they provide it. If they do not, assume they need a general plan.
 - Separate preparation into four tracks: selection readiness, pricing knowledge, pricing-game strategy, and taping-day logistics.
 - Favor realistic rehearsal over trivia. Give the user short scripts, drills, mock scenarios, scoring rubrics, and follow-up homework.

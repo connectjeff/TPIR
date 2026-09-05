@@ -1,0 +1,4 @@
+interface:
+  display_name: "Showcase Ready Web"
+  short_description: "Launch mobile pricing practice on your LAN"
+  default_prompt: "Use $showcase-ready-web to launch the web app on my LAN."

@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## 0.2.0 - 2026-09-05
+
+- Package Showcase Ready as a self-contained Codex plugin with preparation, conversational game-practice, and web-launch skills.
+- Preserve the web application and legacy paths through compatibility symlinks.
+- Document text/CLI, web, installation, updates, actual coverage, and known limitations.
+- Add linked local plugin installation and package validation; identify the Codex plugin in repository metadata.
+
 ## 0.1.2 - 2026-08-23
 
 - Complete the Big Wheel dollar workflow with the $1,000 award, automatic bonus spins, green-section and repeat-dollar prizes, multi-contestant dollar spin-offs, repeat tie-breaks, cash tracking, and tiered celebration graphics.

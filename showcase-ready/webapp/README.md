@@ -1,25 +1,25 @@
 # Showcase Ready Web App
 
-Showcase Ready is a static mobile-friendly browser version of the TPIR practice simulator. It is separate from the Codex skill in `tpir-prep-assistant/`, but both use the same repository-level preparation goals: educational practice, hidden prices until answers resolve, and clear rights boundaries.
+Showcase Ready is the static mobile web application bundled in the Showcase Ready Codex plugin. See [the complete web workflow](../docs/web-workflow.md), [text/CLI workflow](../docs/text-workflow.md), and [coverage review](../docs/review.md).
 
 ## Run
 
 Open `index.html` directly, or serve from the repository root:
 
 ```bash
-python3 -m http.server 8000
+python3 -m http.server 8000 --directory showcase-ready/webapp
 ```
 
 For LAN/mobile testing:
 
 ```bash
-python3 -m http.server 8000 --bind 0.0.0.0
+python3 -m http.server 8000 --bind 0.0.0.0 --directory showcase-ready/webapp
 ```
 
 Then open:
 
 ```text
-http://<host-lan-ip>:8000/webapp/
+http://<host-lan-ip>:8000/
 ```
 
 ## Validation

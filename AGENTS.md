@@ -1,13 +1,17 @@
 # Codex Instructions
 
-This repository contains a Codex-compatible skill, not an application. Keep changes focused on the skill package in `tpir-prep-assistant/` and the small amount of repository documentation needed to install or validate it.
+This repository contains the Showcase Ready Codex plugin and its static web application. Keep preparation coaching, conversational practice, and web-launch instructions consistent with their actual implementations. Preserve the full simulator pipeline when changing packaging.
 
 ## Repository Layout
 
-- `tpir-prep-assistant/SKILL.md`: skill entrypoint and routing.
-- `tpir-prep-assistant/references/`: detailed guidance loaded only when relevant.
-- `tpir-prep-assistant/agents/openai.yaml`: UI metadata.
-- `scripts/install.sh`: local installer for Codex skill directories.
+- `showcase-ready/.codex-plugin/plugin.json`: plugin manifest.
+- `showcase-ready/skills/`: preparation, game practice, and web-launch skills.
+- `showcase-ready/skills/tpir-prep-assistant/references/`: detailed guidance loaded only when relevant.
+- `showcase-ready/webapp/`: static app and original generated product assets.
+- `showcase-ready/docs/`: complete workflows, installation, and review notes.
+- `tpir-prep-assistant` and `webapp`: compatibility symlinks; edit their canonical targets.
+- `scripts/install-plugin.py`: personal marketplace and linked plugin installer.
+- `scripts/install.sh`: legacy single-skill installer.
 - `README.md`: user-facing overview and install instructions.
 
 ## Editing Rules
@@ -24,10 +28,10 @@ This repository contains a Codex-compatible skill, not an application. Keep chan
 
 ## Validation
 
-After modifying the skill, run:
+After changes, run:
 
 ```bash
-python3 ~/.codex/skills/.system/skill-creator/scripts/quick_validate.py tpir-prep-assistant
+scripts/validate.sh
 ```
 
 If the system validator is not available, at minimum check:
@@ -39,6 +43,10 @@ find tpir-prep-assistant/references -type f -name '*.md'
 ```
 
 ## Install Testing
+
+Validate the entire self-contained plugin, all skills, local links, and version agreement. Test the linked installer twice for idempotency and confirm the source and installed component links resolve to the checkout. Keep the installed manifest as a normal copied file so Codex discovers skills. Never overwrite unrelated plugin sources or hand-edit Codex config to register a plugin. Keep the plugin and root LICENSE/NOTICE copies identical.
+
+Keep GitHub current when completing requested changes. Update the changelog for user-visible changes and keep VERSION and plugin manifest versions aligned. Do not claim every catalog game is a full simulator; update the review notes when coverage improves.
 
 The installer should support:
 

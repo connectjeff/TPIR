@@ -9,8 +9,14 @@ test -f VERSION
 grep -qxE '[0-9]+\.[0-9]+\.[0-9]+' VERSION
 
 echo "Validating Codex skill package..."
+python3 scripts/validate-package.py
+if [[ -f "$HOME/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py" ]]; then
+  python3 "$HOME/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py" showcase-ready
+fi
 if [[ -f "$HOME/.codex/skills/.system/skill-creator/scripts/quick_validate.py" ]]; then
-  python3 "$HOME/.codex/skills/.system/skill-creator/scripts/quick_validate.py" tpir-prep-assistant
+  for skill in showcase-ready/skills/*; do
+    python3 "$HOME/.codex/skills/.system/skill-creator/scripts/quick_validate.py" "$skill"
+  done
 else
   test -f tpir-prep-assistant/SKILL.md
   test -f tpir-prep-assistant/agents/openai.yaml

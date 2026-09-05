@@ -1,0 +1,18 @@
+{
+  "name": "showcase-ready",
+  "version": "0.2.0",
+  "description": "Codex preparation coaching, conversational pricing practice, and the Showcase Ready web app.",
+  "author": {
+    "name": "Jeff Alderson"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Showcase Ready",
+    "shortDescription": "Prepare, rehearse, and practice pricing games.",
+    "longDescription": "Prepare for The Price Is Right with interview coaching, conversational game practice, and a mobile web application. Independent educational practice aid.",
+    "developerName": "Jeff Alderson",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": ["Rehearse my contestant interview.", "Run a full pricing practice game.", "Launch Showcase Ready on my LAN."]
+  }
+}
